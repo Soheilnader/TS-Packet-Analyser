@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>791</width>
-    <height>416</height>
+    <height>435</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -83,9 +83,6 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
     <widget class="QLineEdit" name="entry_path">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -94,11 +91,11 @@ p, li { white-space: pre-wrap; }
        <height>20</height>
       </rect>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLineEdit" name="entry_info">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -106,6 +103,9 @@ p, li { white-space: pre-wrap; }
        <width>211</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -139,10 +139,16 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>360</y>
+      <y>370</y>
       <width>47</width>
       <height>13</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Ready</string>
@@ -321,110 +327,107 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
     <widget class="QLineEdit" name="entry_sync_byte">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>150</x>
        <y>20</y>
-       <width>51</width>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
-     <property name="text">
-      <string/>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLineEdit" name="entry_transport_error_indicator">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>150</x>
        <y>40</y>
-       <width>51</width>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QLineEdit" name="entry_transport_priority">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>150</x>
-       <y>80</y>
-       <width>51</width>
-       <height>20</height>
-      </rect>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLineEdit" name="entry_payload_unit_start_indicator">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>150</x>
        <y>60</y>
-       <width>51</width>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QLineEdit" name="entry_transport_scrambling_control">
-     <property name="enabled">
-      <bool>false</bool>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
+    </widget>
+    <widget class="QLineEdit" name="entry_transport_priority">
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>120</y>
-       <width>51</width>
+       <y>80</y>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLineEdit" name="entry_pid">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>150</x>
        <y>100</y>
-       <width>51</width>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QLineEdit" name="entry_continuity_counter">
-     <property name="enabled">
-      <bool>false</bool>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
+    </widget>
+    <widget class="QLineEdit" name="entry_transport_scrambling_control">
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>160</y>
-       <width>51</width>
+       <y>120</y>
+       <width>41</width>
        <height>20</height>
       </rect>
      </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QLineEdit" name="entry_adaptation_field_control">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
      <property name="geometry">
       <rect>
        <x>150</x>
        <y>140</y>
-       <width>51</width>
+       <width>41</width>
        <height>20</height>
       </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="entry_continuity_counter">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>160</y>
+       <width>41</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
