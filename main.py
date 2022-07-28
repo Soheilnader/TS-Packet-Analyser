@@ -108,63 +108,21 @@ class UI(QMainWindow):
             self.label_status.setText("Ready")
 
             self.packet_index = 0
-            self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
-            self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
-            self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
-            self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
-            self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
-            self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
-            self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
-            self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
-            self.PACKET = []
-            for i in range(188):
-                self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
-            self.packet_text = ' '.join(self.PACKET)
-            self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS packet %d" % self.packet_index) 
-            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
+            self.show_func(self.packet_index)    
 
 
         except:
             pass
+
     def first(self):
             self.packet_index = 0
-            self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
-            self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
-            self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
-            self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
-            self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
-            self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
-            self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
-            self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
-            self.PACKET = []
-            for i in range(188):
-                self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
-            self.packet_text = ' '.join(self.PACKET)
-            self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index) 
-            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
-       
+            self.show_func(self.packet_index)    
+   
 
     def prev(self):
         self.packet_index -= 1
         if self.packet_index >=0:
-            self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
-            self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
-            self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
-            self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
-            self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
-            self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
-            self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
-            self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
-            self.PACKET = []
-            for i in range(188):
-                self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
-            self.packet_text = ' '.join(self.PACKET)
-            self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)  
-            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
- 
+            self.show_func(self.packet_index)    
         else:
             self.packet_index = 0
             print("ERROR") 
@@ -172,45 +130,14 @@ class UI(QMainWindow):
     def next(self):
         self.packet_index += 1
         if self.packet_index <= len(self.pckt)-1:
-            self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
-            self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
-            self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
-            self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
-            self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
-            self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
-            self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
-            self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
-            self.PACKET = []
-            for i in range(188):
-                self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
-            self.packet_text = ' '.join(self.PACKET)
-            self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)   
-            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
-  
-
+            self.show_func(self.packet_index)    
         else:
             self.packet_index = len(self.pckt)-1
             print("ERROR")
 
     def last(self):
         self.packet_index = len(self.pckt)-1
-        self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
-        self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
-        self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
-        self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
-        self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
-        self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
-        self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
-        self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
-        self.PACKET = []
-        for i in range(188):
-            self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
-        self.packet_text = ' '.join(self.PACKET)
-        self.text_packet_show.setText(str(self.packet_text))
-        self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index) 
-        self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
-         
+        self.show_func(self.packet_index)    
 
     def go(self):
         if self.radiobutton_packet.isChecked():
@@ -221,24 +148,25 @@ class UI(QMainWindow):
                 if self.pckt[i].PID ==  int(self.entry_goto.text()):
                     self.packet_index = i
                     break
+        self.show_func(self.packet_index)    
 
-        self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
-        self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
-        self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
-        self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
-        self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
-        self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
-        self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
-        self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
+
+    def show_func(self, packet_index):
+        self.entry_sync_byte.setText(hex(self.pckt[packet_index].SYNC_BYTE))
+        self.entry_transport_error_indicator.setText(str(self.pckt[packet_index].TRANSPORT_ERROR_INDICATOR))
+        self.entry_payload_unit_start_indicator.setText(str(self.pckt[packet_index].PAYLOAD_UNIT_START_INDICATOR))
+        self.entry_transport_priority.setText(str(self.pckt[packet_index].TRANSPORT_PRIORITY))
+        self.entry_pid.setText(str(self.pckt[packet_index].PID))
+        self.entry_transport_scrambling_control.setText(str(self.pckt[packet_index].TRANSPORT_SCRAMBLING_CONTROL))
+        self.entry_adaptation_field_control.setText(str(self.pckt[packet_index].ADAPTATION_FIELD_CONTROL))
+        self.entry_continuity_counter.setText(str(self.pckt[packet_index].CONTINUITY_COUNT))
         self.PACKET = []
         for i in range(188):
-            self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
+            self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:])
         self.packet_text = ' '.join(self.PACKET)
         self.text_packet_show.setText(str(self.packet_text))
-        self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)
-        self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)
-
-
+        self.frame_ts_packet.setTitle("TS packet %d" %packet_index) 
+        self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)   
 
 app = QApplication(sys.argv)
 
