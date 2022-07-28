@@ -42,6 +42,9 @@ class UI(QMainWindow):
         self.entry_adaptation_field_control = self.findChild(QLineEdit, "entry_adaptation_field_control")
         self.entry_continuity_counter = self.findChild(QLineEdit, "entry_continuity_counter")
 
+        self.label_status = self.findChild(QLabel, "label_status")
+
+
         self.text_packet_show = self.findChild(QTextBrowser, "text_packet_show")
 
         self.frame_ts_packet = self.findChild(QGroupBox, "frame_ts_packet")
@@ -66,7 +69,7 @@ class UI(QMainWindow):
             self.entry_path.setText(self.path[0])
             self.file_size = os.path.getsize(self.path[0])
             self.number_of_packets = int(self.file_size/188)
-            self.entry_info.setText("Info: %d bytes,  %d packets" %(self.file_size, self.number_of_packets))
+            self.entry_info.setText("%d bytes,  %d packets" %(self.file_size, self.number_of_packets))
 
 
 
@@ -78,7 +81,11 @@ class UI(QMainWindow):
                         bytes = ord(f.read(1))
                         #print(hex(ord(txt)))
                         lst.append(bytes)
+                    self.label_status.setText("Loading data...")
                     self.pckt.append(TS(lst))
+
+            
+            self.label_status.setText("Ready")
 
             self.packet_index = 0
             self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
