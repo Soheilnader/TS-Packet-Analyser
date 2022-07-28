@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton
 from PyQt5 import uic
 import sys
 import os
@@ -19,7 +19,20 @@ class TS:
         self.ADAPTATION_FIELD_CONTROL = (self.HEADER[3]&(0b11<<4))>>4
         self.CONTINUITY_COUNT = self.HEADER[3]&(0b1111)
 
+        self.PID_TYPE=""
 
+        if self.PID == 0:
+            self.PID_TYPE = "PAT"
+        if self.PID == 1:
+            self.PID_TYPE = "CAT"
+        if self.PID == 16:
+            self.PID_TYPE = "NIT"
+        if self.PID == 17:
+            self.PID_TYPE = "SDT"
+        if self.PID == 18:
+            self.PID_TYPE = "NIT"
+        if self.PID == 20:
+            self.PID_TYPE = "TDT"
 
 
 
@@ -43,7 +56,14 @@ class UI(QMainWindow):
         self.entry_continuity_counter = self.findChild(QLineEdit, "entry_continuity_counter")
 
         self.label_status = self.findChild(QLabel, "label_status")
+        self.entry_pid_type = self.findChild(QLineEdit, "entry_pid_type")
 
+        self.radiobutton_packet.findChild(QRadioButton, "radiobutton_packet")
+        self.radiobutton_pid.findChild(QRadioButton, "radiobutton_pid")
+
+        self.entry_goto = self.findChild(QLineEdit, "entry_goto")
+        self.button_goto = self.findChild(QPushButton, "button_goto")
+        self.button_goto.clicked.connect(self.go)
 
         self.text_packet_show = self.findChild(QTextBrowser, "text_packet_show")
 
@@ -101,7 +121,8 @@ class UI(QMainWindow):
                 self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
             self.packet_text = ' '.join(self.PACKET)
             self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS packet %d" % self.packet_index)        
+            self.frame_ts_packet.setTitle("TS packet %d" % self.packet_index) 
+            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
 
 
         except:
@@ -121,7 +142,9 @@ class UI(QMainWindow):
                 self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
             self.packet_text = ' '.join(self.PACKET)
             self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)        
+            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index) 
+            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
+       
 
     def prev(self):
         self.packet_index -= 1
@@ -139,7 +162,9 @@ class UI(QMainWindow):
                 self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
             self.packet_text = ' '.join(self.PACKET)
             self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)   
+            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)  
+            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
+ 
         else:
             self.packet_index = 0
             print("ERROR") 
@@ -160,7 +185,9 @@ class UI(QMainWindow):
                 self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
             self.packet_text = ' '.join(self.PACKET)
             self.text_packet_show.setText(str(self.packet_text))
-            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)     
+            self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)   
+            self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
+  
 
         else:
             self.packet_index = len(self.pckt)-1
@@ -181,7 +208,37 @@ class UI(QMainWindow):
             self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
         self.packet_text = ' '.join(self.PACKET)
         self.text_packet_show.setText(str(self.packet_text))
-        self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)          
+        self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index) 
+        self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)       
+         
+
+    def go(self):
+        if self.radiobutton_packet.isChecked():
+            self.packet_index = int(self.entry_goto.text())
+
+        if self.radiobutton_pid.isChecked():
+            for i in range(self.number_of_packets):
+                if self.pckt[i].PID ==  int(self.entry_goto.text()):
+                    self.packet_index = i
+                    break
+
+        self.entry_sync_byte.setText(hex(self.pckt[self.packet_index].SYNC_BYTE))
+        self.entry_transport_error_indicator.setText(str(self.pckt[self.packet_index].TRANSPORT_ERROR_INDICATOR))
+        self.entry_payload_unit_start_indicator.setText(str(self.pckt[self.packet_index].PAYLOAD_UNIT_START_INDICATOR))
+        self.entry_transport_priority.setText(str(self.pckt[self.packet_index].TRANSPORT_PRIORITY))
+        self.entry_pid.setText(str(self.pckt[self.packet_index].PID))
+        self.entry_transport_scrambling_control.setText(str(self.pckt[self.packet_index].TRANSPORT_SCRAMBLING_CONTROL))
+        self.entry_adaptation_field_control.setText(str(self.pckt[self.packet_index].ADAPTATION_FIELD_CONTROL))
+        self.entry_continuity_counter.setText(str(self.pckt[self.packet_index].CONTINUITY_COUNT))
+        self.PACKET = []
+        for i in range(188):
+            self.PACKET.append(hex(self.pckt[self.packet_index].packet[i])[2:])
+        self.packet_text = ' '.join(self.PACKET)
+        self.text_packet_show.setText(str(self.packet_text))
+        self.frame_ts_packet.setTitle("TS Packet %d" % self.packet_index)
+        self.entry_pid_type.setText(self.pckt[self.packet_index].PID_TYPE)
+
+
 
 app = QApplication(sys.argv)
 
