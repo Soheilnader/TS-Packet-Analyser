@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton, QComboBox, QMenu, QAction
 from PyQt5 import uic
 import sys
 import os
@@ -57,6 +57,10 @@ class UI(QMainWindow):
         super(UI, self).__init__()
 
         uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\TS.ui", self)
+
+        self.menu_open = self.findChild(QAction, "menu_open")
+        #self.menu_open.clicked.connect(self.open)
+
         self.label_path = self.findChild(QLabel, "label_path")
         self.entry_path = self.findChild(QLineEdit, "entry_path")
         self.label_info = self.findChild(QLabel, "label_info")
@@ -96,6 +100,17 @@ class UI(QMainWindow):
         self.button_next.clicked.connect(self.next)
         self.button_last = self.findChild(QPushButton, "button_last")
         self.button_last.clicked.connect(self.last)
+        self.button_ascii = self.findChild(QPushButton, "button_ascii")
+        self.button_ascii.clicked.connect(self.ascii)
+        self.combo_find = self.findChild(QComboBox, "combo_find")
+        self.combo_find.addItem("PAT (0)")
+        self.combo_find.addItem("CAT (1)")
+        self.combo_find.addItem("NIT (16)")
+        self.combo_find.addItem("SDT (17)")        
+        self.combo_find.addItem("EIT (18)")
+        self.combo_find.addItem("TDT (20)") 
+        self.combo_find.activated.connect(self.combo_select)
+
 
         self.show()
 
@@ -123,7 +138,7 @@ class UI(QMainWindow):
 
             
             self.label_status.setText("Ready")
-
+            self.ascii_state = False
             self.packet_index = 0
             self.show_func(self.packet_index)    
 
@@ -158,7 +173,7 @@ class UI(QMainWindow):
 
     def go(self):
         if self.radiobutton_packet.isChecked():
-            self.packet_index = int(self.entry_goto.text())
+            self.packet_index = int(self.entry_goto.text())-1
 
         if self.radiobutton_pid.isChecked():
             for i in range(self.number_of_packets):
@@ -167,6 +182,31 @@ class UI(QMainWindow):
                     break
         self.show_func(self.packet_index)    
 
+    def ascii(self):
+        self.ascii_state = not(self.ascii_state)
+        self.show_func(self.packet_index)  
+
+    def combo_select(self):
+        self.combo_state = self.combo_find.currentText()
+        if self.combo_state == "PAT (0)":
+            self.combo_find_pid = 0
+        if self.combo_state == "CAT (1)":
+            self.combo_find_pid = 1
+        if self.combo_state == "NIT (16)":
+            self.combo_find_pid = 16
+        if self.combo_state == "SDT (17)":
+            self.combo_find_pid = 17
+        if self.combo_state == "EIT (18)": 
+            self.combo_find_pid = 18 
+        if self.combo_state == "TDT (20)":
+            self.combo_find_pid = 20
+        else:
+            pass
+        for i in range(self.number_of_packets):
+            if self.pckt[i].PID ==  self.combo_find_pid:
+                self.packet_index = i
+                break
+        self.show_func(self.packet_index)
 
     def show_func(self, packet_index):
         self.entry_sync_byte.setText(hex(self.pckt[packet_index].SYNC_BYTE))
@@ -179,10 +219,13 @@ class UI(QMainWindow):
         self.entry_continuity_counter.setText(str(self.pckt[packet_index].CONTINUITY_COUNT))
         self.PACKET = []
         for i in range(188):
-            self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:])
+            if self.ascii_state == False:
+                self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:])
+            if self.ascii_state == True:
+                self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
         self.packet_text = ' '.join(self.PACKET)
         self.text_packet_show.setText(str(self.packet_text))
-        self.frame_ts_packet.setTitle("TS packet %d" %packet_index) 
+        self.frame_ts_packet.setTitle("TS packet %d" %(packet_index+1)) 
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
         if self.pckt[packet_index].PID == 0:
             self.more_info = """Table ID: %d
@@ -212,6 +255,7 @@ Last section number: %d""" %(self.pckt[packet_index].TABLE_ID,
             self.text_more_info.setText(self.more_info+"\n\n\n"+self.more_info2+"\n\n\n"+self.more_info3) 
         else:
             self.text_more_info.setText("")
+    
 app = QApplication(sys.argv)
 
 UIWindow = UI()
