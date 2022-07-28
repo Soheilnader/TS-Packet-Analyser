@@ -4,11 +4,11 @@ import sys
 import os
 
 class TS:
-    def __init__(self, packet):
-        self.packet = packet
+    def __init__(self, p):
+        self.packet = p
 
         self.HEADER = self.packet[:4]
-        self.PAYLOAD = self.packet[5:]
+        self.PAYLOAD = self.packet[4:]
 
         self.SYNC_BYTE = self.HEADER[0]
         self.TRANSPORT_ERROR_INDICATOR = (self.HEADER[1]&(1<<7))>>7
@@ -23,6 +23,21 @@ class TS:
 
         if self.PID == 0:
             self.PID_TYPE = "PAT"
+            self.TABLE_ID = self.PAYLOAD[0]
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1]&(1<<3))>>3
+            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
+            self.SECTION_NUMBER = self.PAYLOAD[7]
+            self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
+            self.CRC = self.PAYLOAD[180:]
+            self.PROGRAM_NUMBER = []
+            self.PROGRAM_MAP_PID = []
+            for i in range(9,173,4):
+                self.PROGRAM_NUMBER.append(self.PAYLOAD[i]<<8|self.PAYLOAD[i+1])
+                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i+2]&0b11111)<<8|self.PAYLOAD[i+3])
+
         if self.PID == 1:
             self.PID_TYPE = "CAT"
         if self.PID == 16:
@@ -33,6 +48,7 @@ class TS:
             self.PID_TYPE = "NIT"
         if self.PID == 20:
             self.PID_TYPE = "TDT"
+
 
 
 
@@ -66,6 +82,7 @@ class UI(QMainWindow):
         self.button_goto.clicked.connect(self.go)
 
         self.text_packet_show = self.findChild(QTextBrowser, "text_packet_show")
+        self.text_more_info = self.findChild(QTextBrowser, "text_more_info")
 
         self.frame_ts_packet = self.findChild(QGroupBox, "frame_ts_packet")
 
@@ -166,8 +183,35 @@ class UI(QMainWindow):
         self.packet_text = ' '.join(self.PACKET)
         self.text_packet_show.setText(str(self.packet_text))
         self.frame_ts_packet.setTitle("TS packet %d" %packet_index) 
-        self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)   
+        self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
+        if self.pckt[packet_index].PID == 0:
+            self.more_info = """Table ID: %d
+Section syntax indicator: %d
+Section length: %d
+Transport stream id: %d
+Version number: %d
+Current next: %d
+Section number: %d
+Last section number: %d""" %(self.pckt[packet_index].TABLE_ID,
+            self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
+            self.pckt[packet_index].SECTION_LENGTH, 
+            self.pckt[packet_index].TRANSPORT_STREAM_ID, 
+            self.pckt[packet_index].VERSION_NUMBER, 
+            self.pckt[packet_index].CURRENT_NEXT_INDICATOR, 
+            self.pckt[packet_index].SECTION_NUMBER, 
+            self.pckt[packet_index].LAST_SECTION_NUMBER)
+            #self.text_more_info.setText(self.more_info)
+            self.more_info2 = ""
+            self.more_info3 = ""
 
+            for i in range(len(self.pckt[packet_index].PROGRAM_NUMBER)):
+                if self.pckt[packet_index].PROGRAM_NUMBER[i] > 10000:
+                    continue
+                self.more_info2 += "Program number: %d => Program map PID: %d\n" %(self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
+            self.more_info3 = "Section CRC: " + hex(self.pckt[packet_index].CRC[0])
+            self.text_more_info.setText(self.more_info+"\n\n\n"+self.more_info2+"\n\n\n"+self.more_info3) 
+        else:
+            self.text_more_info.setText("")
 app = QApplication(sys.argv)
 
 UIWindow = UI()
