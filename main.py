@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton, QComboBox, QMenu, QAction
+from struct import pack
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton, QComboBox, QMenu, QAction, QStatusBar, QProgressBar
+import dialogabout
 from PyQt5 import uic
 import sys
 import os
@@ -58,8 +60,11 @@ class UI(QMainWindow):
 
         uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\TS.ui", self)
 
-        self.menu_open = self.findChild(QAction, "menu_open")
-        #self.menu_open.clicked.connect(self.open)
+        self.statusbar = self.findChild(QStatusBar, "statusbar")
+
+        self.menu_open.triggered.connect(self.open)
+        self.menu_exit.triggered.connect(self.exit)
+        self.menu_about.triggered.connect(self.about)
 
         self.label_path = self.findChild(QLabel, "label_path")
         self.entry_path = self.findChild(QLineEdit, "entry_path")
@@ -112,6 +117,9 @@ class UI(QMainWindow):
         self.combo_find.activated.connect(self.combo_select)
 
 
+        self.progress_load = self.findChild(QProgressBar, "progress_load")
+
+
         self.show()
 
     def open(self):
@@ -124,20 +132,22 @@ class UI(QMainWindow):
             self.entry_info.setText("%d bytes,  %d packets" %(self.file_size, self.number_of_packets))
 
 
-
             self.pckt = []
             with open(self.path[0], "rb") as f:
-                for j in range(int(self.file_size/188)):
+                for j in range(self.number_of_packets):
                     lst = []
                     for i in range(188):
                         bytes = ord(f.read(1))
                         #print(hex(ord(txt)))
                         lst.append(bytes)
-                    self.label_status.setText("Loading data...")
+                    
+                    self.progress_load.setRange(0,int(self.file_size/188-1))
+                    self.progress_load.setValue(j)
+                    if j < self.number_of_packets:
+                        self.statusbar.showMessage("Loading...")
                     self.pckt.append(TS(lst))
 
-            
-            self.label_status.setText("Ready")
+            self.statusbar.showMessage("Ready")
             self.ascii_state = False
             self.packet_index = 0
             self.show_func(self.packet_index)    
@@ -256,6 +266,16 @@ Last section number: %d""" %(self.pckt[packet_index].TABLE_ID,
         else:
             self.text_more_info.setText("")
     
+    def about(self):
+        self.ui = dialogabout.UId()
+        self.ui.show()
+
+    def pid_list(self):
+        pass
+
+    def exit(self):
+        sys.exit()
+
 app = QApplication(sys.argv)
 
 UIWindow = UI()
