@@ -1,6 +1,6 @@
-from struct import pack
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton, QComboBox, QMenu, QAction, QStatusBar, QProgressBar
 import dialogabout
+import dialogpidlist
 from PyQt5 import uic
 import sys
 import os
@@ -42,14 +42,25 @@ class TS:
 
         if self.PID == 1:
             self.PID_TYPE = "CAT"
-        if self.PID == 16:
+        elif self.PID == 16:
             self.PID_TYPE = "NIT"
-        if self.PID == 17:
+        elif self.PID == 17:
             self.PID_TYPE = "SDT"
-        if self.PID == 18:
+            self.TABLE_ID = self.PAYLOAD[1]
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1]&(1<<3))>>3
+            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
+            self.SECTION_NUMBER = self.PAYLOAD[7]
+            self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
+        elif self.PID == 18:
             self.PID_TYPE = "NIT"
-        if self.PID == 20:
+        elif self.PID == 20:
             self.PID_TYPE = "TDT"
+        elif self.PID == 8191:
+            self.PID_TYPE = "NULL Packet"
+
 
 
 
@@ -59,12 +70,15 @@ class UI(QMainWindow):
         super(UI, self).__init__()
 
         uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\TS.ui", self)
+        self.setFixedSize(791, 434)
+
 
         self.statusbar = self.findChild(QStatusBar, "statusbar")
 
         self.menu_open.triggered.connect(self.open)
         self.menu_exit.triggered.connect(self.exit)
         self.menu_about.triggered.connect(self.about)
+        self.menu_pidlist.triggered.connect(self.pid_list)
 
         self.label_path = self.findChild(QLabel, "label_path")
         self.entry_path = self.findChild(QLineEdit, "entry_path")
@@ -133,6 +147,7 @@ class UI(QMainWindow):
 
 
             self.pckt = []
+            self.packet_count = [0 for i in range(8192)]
             with open(self.path[0], "rb") as f:
                 for j in range(self.number_of_packets):
                     lst = []
@@ -140,12 +155,13 @@ class UI(QMainWindow):
                         bytes = ord(f.read(1))
                         #print(hex(ord(txt)))
                         lst.append(bytes)
-                    
                     self.progress_load.setRange(0,int(self.file_size/188-1))
                     self.progress_load.setValue(j)
                     if j < self.number_of_packets:
                         self.statusbar.showMessage("Loading...")
                     self.pckt.append(TS(lst))
+                    self.packet_count[self.pckt[j].PID] += 1
+
 
             self.statusbar.showMessage("Ready")
             self.ascii_state = False
@@ -237,15 +253,16 @@ class UI(QMainWindow):
         self.text_packet_show.setText(str(self.packet_text))
         self.frame_ts_packet.setTitle("TS packet %d" %(packet_index+1)) 
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
+
         if self.pckt[packet_index].PID == 0:
-            self.more_info = """Table ID: %d
+            self.more_info = """Table ID: %s
 Section syntax indicator: %d
 Section length: %d
 Transport stream id: %d
 Version number: %d
 Current next: %d
 Section number: %d
-Last section number: %d""" %(self.pckt[packet_index].TABLE_ID,
+Last section number: %d""" %(hex(self.pckt[packet_index].TABLE_ID),
             self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
             self.pckt[packet_index].SECTION_LENGTH, 
             self.pckt[packet_index].TRANSPORT_STREAM_ID, 
@@ -256,13 +273,33 @@ Last section number: %d""" %(self.pckt[packet_index].TABLE_ID,
             #self.text_more_info.setText(self.more_info)
             self.more_info2 = ""
             self.more_info3 = ""
-
             for i in range(len(self.pckt[packet_index].PROGRAM_NUMBER)):
                 if self.pckt[packet_index].PROGRAM_NUMBER[i] > 10000:
                     continue
                 self.more_info2 += "Program number: %d => Program map PID: %d\n" %(self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
             self.more_info3 = "Section CRC: " + hex(self.pckt[packet_index].CRC[0])
             self.text_more_info.setText(self.more_info+"\n\n\n"+self.more_info2+"\n\n\n"+self.more_info3) 
+
+
+        elif self.pckt[packet_index].PID == 17:
+            self.more_info = """Table ID: %s
+Section syntax indicator: %d
+Section length: %d
+Transport stream id: %d
+Version number: %d
+Current next: %d
+Section number: %d
+Last section number: %d""" %(hex(self.pckt[packet_index].TABLE_ID),
+            self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
+            self.pckt[packet_index].SECTION_LENGTH, 
+            self.pckt[packet_index].TRANSPORT_STREAM_ID, 
+            self.pckt[packet_index].VERSION_NUMBER, 
+            self.pckt[packet_index].CURRENT_NEXT_INDICATOR, 
+            self.pckt[packet_index].SECTION_NUMBER, 
+            self.pckt[packet_index].LAST_SECTION_NUMBER)
+
+            self.text_more_info.setText(self.more_info)
+
         else:
             self.text_more_info.setText("")
     
@@ -271,8 +308,10 @@ Last section number: %d""" %(self.pckt[packet_index].TABLE_ID,
         self.ui.show()
 
     def pid_list(self):
-        pass
-
+        self.ui = dialogpidlist.UId()
+        self.ui.packet_count = self.packet_count
+        self.ui.show()
+        
     def exit(self):
         sys.exit()
 
