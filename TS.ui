@@ -7,11 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>791</width>
-    <height>435</height>
+    <height>434</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>TS packet analyser</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../packet.png</normaloff>../packet.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="frame_ts_packet">
@@ -149,25 +153,6 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>First</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_status">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>370</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Ready</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="text_more_info">
@@ -546,6 +531,25 @@ p, li { white-space: pre-wrap; }
      </property>
     </item>
    </widget>
+   <widget class="QProgressBar" name="progress_load">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>350</y>
+      <width>201</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>180</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+    <property name="format">
+     <string>%p%</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -569,10 +573,26 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="menu_about"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionPID_list"/>
+    <addaction name="actionRemux"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+  </widget>
   <action name="menu_open">
    <property name="text">
     <string>Open</string>
@@ -589,6 +609,16 @@ p, li { white-space: pre-wrap; }
   <action name="menu_about">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionPID_list">
+   <property name="text">
+    <string>PID list</string>
+   </property>
+  </action>
+  <action name="actionRemux">
+   <property name="text">
+    <string>Remux</string>
    </property>
   </action>
  </widget>
