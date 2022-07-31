@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, \
-    QGroupBox, QRadioButton, QComboBox, QStatusBar, QProgressBar
+    QGroupBox, QRadioButton, QComboBox, QStatusBar, QProgressBar, QTableWidget, QTableWidgetItem
 import dialogabout
 import dialogpidlist
 from PyQt5 import uic
@@ -70,7 +70,7 @@ class UI(QMainWindow):
         super(UI, self).__init__()
 
         uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\TS.ui", self)
-        self.setFixedSize(791, 434)
+        self.setFixedSize(876, 431)
 
         self.statusbar = self.findChild(QStatusBar, "statusbar")
 
@@ -103,7 +103,8 @@ class UI(QMainWindow):
         self.button_goto = self.findChild(QPushButton, "button_goto")
         self.button_goto.clicked.connect(self.go)
 
-        self.text_packet_show = self.findChild(QTextBrowser, "text_packet_show")
+        #self.text_packet_show = self.findChild(QTextBrowser, "text_packet_show")
+        self.table_show = self.findChild(QTableWidget, "table_show")
         self.text_more_info = self.findChild(QTextBrowser, "text_more_info")
 
         self.frame_ts_packet = self.findChild(QGroupBox, "frame_ts_packet")
@@ -264,8 +265,23 @@ class UI(QMainWindow):
                 self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:])
             if self.ascii_state == True:
                 self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
-        self.packet_text = ' '.join(self.PACKET)
-        self.text_packet_show.setText(str(self.packet_text))
+        #self.packet_text = ' '.join(self.PACKET)
+        #self.text_packet_show.setText(str(self.packet_text))
+        self.yo = self.PACKET.copy()
+        #self.packet_text = self.packet_text.split(' ')
+
+        for i in range(4):
+            self.yo.append(' ')
+
+    #    for i in range(16):
+    #        self.table_show.resizeColumnToContents(i)
+
+
+        self.table_show.setRowCount(12)
+        for i in range(12):
+            for j in range(16):
+                self.table_show.setItem(i, j, QTableWidgetItem(self.yo[i*16+j]))
+
         self.frame_ts_packet.setTitle("TS packet %d" % (packet_index + 1))
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
 
