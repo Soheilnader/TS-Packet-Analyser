@@ -28,34 +28,35 @@ class TS:
         if self.PID == 0:
             self.PID_TYPE = "PAT"
             self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
-            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1]&(1<<3))>>3
+            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
             self.CRC = self.PAYLOAD[180:]
             self.PROGRAM_NUMBER = []
             self.PROGRAM_MAP_PID = []
-            for i in range(9, 173, 4):
-                self.PROGRAM_NUMBER.append(self.PAYLOAD[i] << 8 | self.PAYLOAD[i + 1])
-                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i + 2] & 0b11111) << 8 | self.PAYLOAD[i + 3])
+            for i in range(9,173,4):
+                self.PROGRAM_NUMBER.append(self.PAYLOAD[i]<<8|self.PAYLOAD[i+1])
+                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i+2]&0b11111)<<8|self.PAYLOAD[i+3])
 
         if self.PID == 1:
             self.PID_TYPE = "CAT"
-        elif self.PID == 16:
+        if self.PID == 16:
             self.PID_TYPE = "NIT"
-        elif self.PID == 17:
+        if self.PID == 17:
             self.PID_TYPE = "SDT"
             self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
-            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2]& 0x80) >> 7
+            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
+            self.ORIGINAL_NETWORK_ID = (self.PAYLOAD[9] << 8 )|(self.PAYLOAD[10])
         elif self.PID == 18:
             self.PID_TYPE = "NIT"
         elif self.PID == 20:
@@ -167,66 +168,87 @@ class UI(QMainWindow):
             pass
 
     def first(self):
-        self.packet_index = 0
-        self.show_func(self.packet_index)
+        try:
+            self.packet_index = 0
+            self.show_func(self.packet_index)
+        except:
+            pass
 
     def prev(self):
-        self.packet_index -= 1
-        if self.packet_index >= 0:
-            self.show_func(self.packet_index)
-        else:
-            self.packet_index = 0
-            print("ERROR")
+        try:
+            self.packet_index -= 1
+            if self.packet_index >= 0:
+                self.show_func(self.packet_index)
+            else:
+                self.packet_index = 0
+                print("ERROR")
+        except:
+            pass
 
     def next(self):
-        self.packet_index += 1
-        if self.packet_index <= len(self.pckt) - 1:
-            self.show_func(self.packet_index)
-        else:
-            self.packet_index = len(self.pckt) - 1
-            print("ERROR")
+        try:
+            self.packet_index += 1
+            if self.packet_index <= len(self.pckt) - 1:
+                self.show_func(self.packet_index)
+            else:
+                self.packet_index = len(self.pckt) - 1
+                print("ERROR")
+        except:
+            pass
 
     def last(self):
-        self.packet_index = len(self.pckt) - 1
-        self.show_func(self.packet_index)
+        try:
+            self.packet_index = len(self.pckt) - 1
+            self.show_func(self.packet_index)
+        except:
+            pass
 
     def go(self):
-        if self.radiobutton_packet.isChecked():
-            self.packet_index = int(self.entry_goto.text()) - 1
+        try:
+            if self.radiobutton_packet.isChecked():
+                self.packet_index = int(self.entry_goto.text()) - 1
 
-        if self.radiobutton_pid.isChecked():
-            for i in range(self.number_of_packets):
-                if self.pckt[i].PID == int(self.entry_goto.text()):
-                    self.packet_index = i
-                    break
-        self.show_func(self.packet_index)
+            if self.radiobutton_pid.isChecked():
+                for i in range(self.number_of_packets):
+                    if self.pckt[i].PID == int(self.entry_goto.text()):
+                        self.packet_index = i
+                        break
+            self.show_func(self.packet_index)
+        except:
+            pass
 
     def ascii(self):
-        self.ascii_state = not (self.ascii_state)
-        self.show_func(self.packet_index)
+        try:
+            self.ascii_state = not (self.ascii_state)
+            self.show_func(self.packet_index)
+        except:
+            pass
 
     def combo_select(self):
-        self.combo_state = self.combo_find.currentText()
-        if self.combo_state == "PAT (0)":
-            self.combo_find_pid = 0
-        if self.combo_state == "CAT (1)":
-            self.combo_find_pid = 1
-        if self.combo_state == "NIT (16)":
-            self.combo_find_pid = 16
-        if self.combo_state == "SDT (17)":
-            self.combo_find_pid = 17
-        if self.combo_state == "EIT (18)":
-            self.combo_find_pid = 18
-        if self.combo_state == "TDT (20)":
-            self.combo_find_pid = 20
-        else:
+        try:
+            self.combo_state = self.combo_find.currentText()
+            if self.combo_state == "PAT (0)":
+                self.combo_find_pid = 0
+            if self.combo_state == "CAT (1)":
+                self.combo_find_pid = 1
+            if self.combo_state == "NIT (16)":
+                self.combo_find_pid = 16
+            if self.combo_state == "SDT (17)":
+                self.combo_find_pid = 17
+            if self.combo_state == "EIT (18)":
+                self.combo_find_pid = 18
+            if self.combo_state == "TDT (20)":
+                self.combo_find_pid = 20
+            else:
+                pass
+            for i in range(self.number_of_packets):
+                if self.pckt[i].PID == self.combo_find_pid:
+                    self.packet_index = i
+                    break
+            self.show_func(self.packet_index)
+        except:
             pass
-        for i in range(self.number_of_packets):
-            if self.pckt[i].PID == self.combo_find_pid:
-                self.packet_index = i
-                break
-        self.show_func(self.packet_index)
-
+        
     def show_func(self, packet_index):
         self.entry_sync_byte.setText(hex(self.pckt[packet_index].SYNC_BYTE))
         self.entry_transport_error_indicator.setText(str(self.pckt[packet_index].TRANSPORT_ERROR_INDICATOR))
