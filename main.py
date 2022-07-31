@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, QGroupBox, QRadioButton, QComboBox, QMenu, QAction, QStatusBar, QProgressBar
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, \
+    QGroupBox, QRadioButton, QComboBox, QStatusBar, QProgressBar
 import dialogabout
 import dialogpidlist
 from PyQt5 import uic
 import sys
 import os
+
 
 class TS:
     def __init__(self, p):
@@ -13,32 +15,32 @@ class TS:
         self.PAYLOAD = self.packet[4:]
 
         self.SYNC_BYTE = self.HEADER[0]
-        self.TRANSPORT_ERROR_INDICATOR = (self.HEADER[1]&(1<<7))>>7
-        self.PAYLOAD_UNIT_START_INDICATOR = (self.HEADER[1]&(1<<6))>>6
-        self.TRANSPORT_PRIORITY = (self.HEADER[1]&(1<<5))>>5
-        self.PID = ((self.HEADER[1]&(0b11111))<<8)|self.HEADER[2]
-        self.TRANSPORT_SCRAMBLING_CONTROL = (self.HEADER[3]&(0b11<<6))>>6
-        self.ADAPTATION_FIELD_CONTROL = (self.HEADER[3]&(0b11<<4))>>4
-        self.CONTINUITY_COUNT = self.HEADER[3]&(0b1111)
+        self.TRANSPORT_ERROR_INDICATOR = (self.HEADER[1] & (1 << 7)) >> 7
+        self.PAYLOAD_UNIT_START_INDICATOR = (self.HEADER[1] & (1 << 6)) >> 6
+        self.TRANSPORT_PRIORITY = (self.HEADER[1] & (1 << 5)) >> 5
+        self.PID = ((self.HEADER[1] & 0b11111) << 8) | self.HEADER[2]
+        self.TRANSPORT_SCRAMBLING_CONTROL = (self.HEADER[3] & (0b11 << 6)) >> 6
+        self.ADAPTATION_FIELD_CONTROL = (self.HEADER[3] & (0b11 << 4)) >> 4
+        self.CONTINUITY_COUNT = self.HEADER[3] & 0b1111
 
-        self.PID_TYPE=""
+        self.PID_TYPE = ""
 
         if self.PID == 0:
             self.PID_TYPE = "PAT"
-            self.TABLE_ID = self.PAYLOAD[0]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1]&(1<<3))>>3
-            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
+            self.TABLE_ID = self.PAYLOAD[1]
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
+            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
             self.CRC = self.PAYLOAD[180:]
             self.PROGRAM_NUMBER = []
             self.PROGRAM_MAP_PID = []
-            for i in range(9,173,4):
-                self.PROGRAM_NUMBER.append(self.PAYLOAD[i]<<8|self.PAYLOAD[i+1])
-                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i+2]&0b11111)<<8|self.PAYLOAD[i+3])
+            for i in range(9, 173, 4):
+                self.PROGRAM_NUMBER.append(self.PAYLOAD[i] << 8 | self.PAYLOAD[i + 1])
+                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i + 2] & 0b11111) << 8 | self.PAYLOAD[i + 3])
 
         if self.PID == 1:
             self.PID_TYPE = "CAT"
@@ -47,11 +49,11 @@ class TS:
         elif self.PID == 17:
             self.PID_TYPE = "SDT"
             self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1]&(1<<3))>>3
-            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
+            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
         elif self.PID == 18:
@@ -62,16 +64,12 @@ class TS:
             self.PID_TYPE = "NULL Packet"
 
 
-
-
-
 class UI(QMainWindow):
     def __init__(self):
         super(UI, self).__init__()
 
         uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\TS.ui", self)
         self.setFixedSize(791, 434)
-
 
         self.statusbar = self.findChild(QStatusBar, "statusbar")
 
@@ -125,14 +123,12 @@ class UI(QMainWindow):
         self.combo_find.addItem("PAT (0)")
         self.combo_find.addItem("CAT (1)")
         self.combo_find.addItem("NIT (16)")
-        self.combo_find.addItem("SDT (17)")        
+        self.combo_find.addItem("SDT (17)")
         self.combo_find.addItem("EIT (18)")
-        self.combo_find.addItem("TDT (20)") 
+        self.combo_find.addItem("TDT (20)")
         self.combo_find.activated.connect(self.combo_select)
 
-
         self.progress_load = self.findChild(QProgressBar, "progress_load")
-
 
         self.show()
 
@@ -142,9 +138,8 @@ class UI(QMainWindow):
             self.path = QFileDialog.getOpenFileName(self, "Open File", "", "TS Files (*.ts)")
             self.entry_path.setText(self.path[0])
             self.file_size = os.path.getsize(self.path[0])
-            self.number_of_packets = int(self.file_size/188)
-            self.entry_info.setText("%d bytes,  %d packets" %(self.file_size, self.number_of_packets))
-
+            self.number_of_packets = int(self.file_size / 188)
+            self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))
 
             self.pckt = []
             self.packet_count = [0 for i in range(8192)]
@@ -153,64 +148,62 @@ class UI(QMainWindow):
                     lst = []
                     for i in range(188):
                         bytes = ord(f.read(1))
-                        #print(hex(ord(txt)))
+                        # print(hex(ord(txt)))
                         lst.append(bytes)
-                    self.progress_load.setRange(0,int(self.file_size/188-1))
+                    self.progress_load.setRange(0, int(self.file_size / 188 - 1))
                     self.progress_load.setValue(j)
                     if j < self.number_of_packets:
                         self.statusbar.showMessage("Loading...")
                     self.pckt.append(TS(lst))
                     self.packet_count[self.pckt[j].PID] += 1
 
-
             self.statusbar.showMessage("Ready")
             self.ascii_state = False
             self.packet_index = 0
-            self.show_func(self.packet_index)    
+            self.show_func(self.packet_index)
 
 
         except:
             pass
 
     def first(self):
-            self.packet_index = 0
-            self.show_func(self.packet_index)    
-   
+        self.packet_index = 0
+        self.show_func(self.packet_index)
 
     def prev(self):
         self.packet_index -= 1
-        if self.packet_index >=0:
-            self.show_func(self.packet_index)    
+        if self.packet_index >= 0:
+            self.show_func(self.packet_index)
         else:
             self.packet_index = 0
-            print("ERROR") 
+            print("ERROR")
 
     def next(self):
         self.packet_index += 1
-        if self.packet_index <= len(self.pckt)-1:
-            self.show_func(self.packet_index)    
+        if self.packet_index <= len(self.pckt) - 1:
+            self.show_func(self.packet_index)
         else:
-            self.packet_index = len(self.pckt)-1
+            self.packet_index = len(self.pckt) - 1
             print("ERROR")
 
     def last(self):
-        self.packet_index = len(self.pckt)-1
-        self.show_func(self.packet_index)    
+        self.packet_index = len(self.pckt) - 1
+        self.show_func(self.packet_index)
 
     def go(self):
         if self.radiobutton_packet.isChecked():
-            self.packet_index = int(self.entry_goto.text())-1
+            self.packet_index = int(self.entry_goto.text()) - 1
 
         if self.radiobutton_pid.isChecked():
             for i in range(self.number_of_packets):
-                if self.pckt[i].PID ==  int(self.entry_goto.text()):
+                if self.pckt[i].PID == int(self.entry_goto.text()):
                     self.packet_index = i
                     break
-        self.show_func(self.packet_index)    
+        self.show_func(self.packet_index)
 
     def ascii(self):
-        self.ascii_state = not(self.ascii_state)
-        self.show_func(self.packet_index)  
+        self.ascii_state = not (self.ascii_state)
+        self.show_func(self.packet_index)
 
     def combo_select(self):
         self.combo_state = self.combo_find.currentText()
@@ -222,14 +215,14 @@ class UI(QMainWindow):
             self.combo_find_pid = 16
         if self.combo_state == "SDT (17)":
             self.combo_find_pid = 17
-        if self.combo_state == "EIT (18)": 
-            self.combo_find_pid = 18 
+        if self.combo_state == "EIT (18)":
+            self.combo_find_pid = 18
         if self.combo_state == "TDT (20)":
             self.combo_find_pid = 20
         else:
             pass
         for i in range(self.number_of_packets):
-            if self.pckt[i].PID ==  self.combo_find_pid:
+            if self.pckt[i].PID == self.combo_find_pid:
                 self.packet_index = i
                 break
         self.show_func(self.packet_index)
@@ -251,7 +244,7 @@ class UI(QMainWindow):
                 self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
         self.packet_text = ' '.join(self.PACKET)
         self.text_packet_show.setText(str(self.packet_text))
-        self.frame_ts_packet.setTitle("TS packet %d" %(packet_index+1)) 
+        self.frame_ts_packet.setTitle("TS packet %d" % (packet_index + 1))
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
 
         if self.pckt[packet_index].PID == 0:
@@ -262,23 +255,24 @@ Transport stream id: %d
 Version number: %d
 Current next: %d
 Section number: %d
-Last section number: %d""" %(hex(self.pckt[packet_index].TABLE_ID),
-            self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
-            self.pckt[packet_index].SECTION_LENGTH, 
-            self.pckt[packet_index].TRANSPORT_STREAM_ID, 
-            self.pckt[packet_index].VERSION_NUMBER, 
-            self.pckt[packet_index].CURRENT_NEXT_INDICATOR, 
-            self.pckt[packet_index].SECTION_NUMBER, 
-            self.pckt[packet_index].LAST_SECTION_NUMBER)
-            #self.text_more_info.setText(self.more_info)
+Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
+                              self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
+                              self.pckt[packet_index].SECTION_LENGTH,
+                              self.pckt[packet_index].TRANSPORT_STREAM_ID,
+                              self.pckt[packet_index].VERSION_NUMBER,
+                              self.pckt[packet_index].CURRENT_NEXT_INDICATOR,
+                              self.pckt[packet_index].SECTION_NUMBER,
+                              self.pckt[packet_index].LAST_SECTION_NUMBER)
+            # self.text_more_info.setText(self.more_info)
             self.more_info2 = ""
             self.more_info3 = ""
             for i in range(len(self.pckt[packet_index].PROGRAM_NUMBER)):
                 if self.pckt[packet_index].PROGRAM_NUMBER[i] > 10000:
                     continue
-                self.more_info2 += "Program number: %d => Program map PID: %d\n" %(self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
+                self.more_info2 += "Program number: %d => Program map PID: %d\n" % (
+                self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
             self.more_info3 = "Section CRC: " + hex(self.pckt[packet_index].CRC[0])
-            self.text_more_info.setText(self.more_info+"\n\n\n"+self.more_info2+"\n\n\n"+self.more_info3) 
+            self.text_more_info.setText(self.more_info + "\n\n\n" + self.more_info2 + "\n\n\n" + self.more_info3)
 
 
         elif self.pckt[packet_index].PID == 17:
@@ -289,20 +283,20 @@ Transport stream id: %d
 Version number: %d
 Current next: %d
 Section number: %d
-Last section number: %d""" %(hex(self.pckt[packet_index].TABLE_ID),
-            self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
-            self.pckt[packet_index].SECTION_LENGTH, 
-            self.pckt[packet_index].TRANSPORT_STREAM_ID, 
-            self.pckt[packet_index].VERSION_NUMBER, 
-            self.pckt[packet_index].CURRENT_NEXT_INDICATOR, 
-            self.pckt[packet_index].SECTION_NUMBER, 
-            self.pckt[packet_index].LAST_SECTION_NUMBER)
+Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
+                              self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
+                              self.pckt[packet_index].SECTION_LENGTH,
+                              self.pckt[packet_index].TRANSPORT_STREAM_ID,
+                              self.pckt[packet_index].VERSION_NUMBER,
+                              self.pckt[packet_index].CURRENT_NEXT_INDICATOR,
+                              self.pckt[packet_index].SECTION_NUMBER,
+                              self.pckt[packet_index].LAST_SECTION_NUMBER)
 
             self.text_more_info.setText(self.more_info)
 
         else:
             self.text_more_info.setText("")
-    
+
     def about(self):
         self.ui = dialogabout.UId()
         self.ui.show()
@@ -311,13 +305,12 @@ Last section number: %d""" %(hex(self.pckt[packet_index].TABLE_ID),
         self.ui = dialogpidlist.UId()
         self.ui.packet_count = self.packet_count
         self.ui.show()
-        
+
     def exit(self):
         sys.exit()
+
 
 app = QApplication(sys.argv)
 
 UIWindow = UI()
 app.exec()
-
-
