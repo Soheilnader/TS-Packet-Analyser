@@ -262,7 +262,7 @@ class UI(QMainWindow):
         self.PACKET = []
         for i in range(188):
             if self.ascii_state == False:
-                self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:])
+                self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:].upper())
             if self.ascii_state == True:
                 self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
         #self.packet_text = ' '.join(self.PACKET)
