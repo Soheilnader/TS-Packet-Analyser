@@ -262,7 +262,7 @@ class UI(QMainWindow):
         self.PACKET = []
         for i in range(188):
             if self.ascii_state == False:
-                self.PACKET.append(hex(self.pckt[packet_index].packet[i])[2:].upper())
+                self.PACKET.append(self.str_2_char(hex(self.pckt[packet_index].packet[i])[2:].upper()))
             if self.ascii_state == True:
                 self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
         #self.packet_text = ' '.join(self.PACKET)
@@ -344,6 +344,13 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         self.ui.packet_count = self.packet_count
         self.ui.show()
 
+    def str_2_char(self, string):
+        if len(string) == 2:
+            return string
+        else:
+            return "0"+string
+
+        
     def exit(self):
         sys.exit()
 
