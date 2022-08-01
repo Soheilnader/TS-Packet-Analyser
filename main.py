@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, \
-    QGroupBox, QRadioButton, QComboBox, QStatusBar, QProgressBar, QTableWidget, QTableWidgetItem
+    QGroupBox, QRadioButton, QComboBox, QStatusBar, QProgressBar, QTableWidget, QTableWidgetItem, QAction
 import dialogabout
 import dialogpidlist
 from PyQt5 import uic
@@ -35,7 +35,7 @@ class TS:
             self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
-            self.CRC = self.PAYLOAD[180:]
+            self.CRC = self.PAYLOAD[self.SECTION_LENGTH:self.SECTION_LENGTH + 4]
             self.PROGRAM_NUMBER = []
             self.PROGRAM_MAP_PID = []
             for i in range(9,173,4):
@@ -69,10 +69,25 @@ class UI(QMainWindow):
     def __init__(self):
         super(UI, self).__init__()
 
-        uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\TS.ui", self)
+
+        #uic.loadUi(self.resource_path("TS.ui"), self)
+        #uic.loadUi("%s\\TS.ui"%os.getcwd(), self)
+        #uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\output\TS.ui", self)
+
+# Import .ui forms for the GUI using function resource_path()
+        ts_ui = self.resource_path("TS.ui")
+        uic.loadUi(ts_ui, self)
+
         self.setFixedSize(876, 431)
 
         self.statusbar = self.findChild(QStatusBar, "statusbar")
+
+
+        self.menu_open = self.findChild(QAction, "menu_open")
+        self.menu_exit = self.findChild(QAction, "menu_exit")
+        self.menu_about = self.findChild(QAction, "menu_about")
+        self.menu_pidlist = self.findChild(QAction, "menu_pidlist")
+
 
         self.menu_open.triggered.connect(self.open)
         self.menu_exit.triggered.connect(self.exit)
@@ -309,7 +324,8 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
                     continue
                 self.more_info2 += "Program number: %d => Program map PID: %d\n" % (
                 self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
-            self.more_info3 = "Section CRC: " + hex(self.pckt[packet_index].CRC[0])
+            self.more_info3 = "Section CRC: %s %s %s %s"  %(self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()), self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
+            self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()), self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
             self.text_more_info.setText(self.more_info + "\n\n\n" + self.more_info2 + "\n\n\n" + self.more_info3)
 
 
@@ -350,7 +366,17 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         else:
             return "0"+string
 
-        
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)
+
+            
     def exit(self):
         sys.exit()
 
