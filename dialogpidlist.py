@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QDialog, QApplication, QTableWidget, QTableWidgetItem, QLabel
+from PyQt5.QtWidgets import QDialog, QApplication, QTableWidget, QTableWidgetItem
 from PyQt5 import uic
 import sys
 import os
+
+from TS import TS
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -15,7 +17,7 @@ def resource_path(relative_path):
 
 
 class DialogPidList(QDialog):
-    def __init__(self, t):
+    def __init__(self, packet_count):
         super(DialogPidList, self).__init__()
         # uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\dialogpidlist.ui", self)
         ts_ui = resource_path("dialogpidlist.ui")
@@ -31,19 +33,19 @@ class DialogPidList(QDialog):
         self.table_pid.setColumnWidth(3, 200)
 
         self.non_zero_count = 0
-        for i in range(len(t)):
-            if t[i] != 0:
+        for i in range(len(packet_count)):
+            if packet_count[i] != 0:
                 self.non_zero_count += 1
 
         self.table_pid.setRowCount(self.non_zero_count)
         row = 0
-        total = sum(t)
-        for i in range(len(t)):
-            if t[i] == 0:
+        total = sum(packet_count)
+        for i in range(len(packet_count)):
+            if packet_count[i] == 0:
                 continue
             self.table_pid.setItem(row, 0, QTableWidgetItem(str(i)))
-            self.table_pid.setItem(row, 1, QTableWidgetItem(str(t[i])))
-            self.table_pid.setItem(row, 2, QTableWidgetItem(str(round(t[i]*100/total, 2))))
+            self.table_pid.setItem(row, 1, QTableWidgetItem(str(packet_count[i])))
+            self.table_pid.setItem(row, 2, QTableWidgetItem(str(round(packet_count[i]*100/total, 2))))
             if i == 0:
                 self.table_pid.setItem(row, 3, QTableWidgetItem("PAT"))
             if i == 1:
@@ -58,6 +60,7 @@ class DialogPidList(QDialog):
                 self.table_pid.setItem(row, 3, QTableWidgetItem("TDT"))
             if i == 8191:
                 self.table_pid.setItem(row, 3, QTableWidgetItem("NULL Packet"))
+            #if
             row+=1
 
         for i in range(self.non_zero_count):
