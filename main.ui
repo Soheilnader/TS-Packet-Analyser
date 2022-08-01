@@ -777,7 +777,8 @@ p, li { white-space: pre-wrap; }
      <string>Tools</string>
     </property>
     <addaction name="menu_pidlist"/>
-    <addaction name="actionRemux"/>
+    <addaction name="menu_packetlist"/>
+    <addaction name="menu_remux"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -815,9 +816,14 @@ p, li { white-space: pre-wrap; }
     <string>PID list</string>
    </property>
   </action>
-  <action name="actionRemux">
+  <action name="menu_remux">
    <property name="text">
     <string>Remux</string>
+   </property>
+  </action>
+  <action name="menu_packetlist">
+   <property name="text">
+    <string>Packet list</string>
    </property>
   </action>
  </widget>
