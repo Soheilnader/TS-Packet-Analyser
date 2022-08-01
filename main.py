@@ -4,66 +4,20 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidgetItem
 
+from TS import TS
 import dialogabout
 import dialogpidlist
 
 
-class TS:
-    def __init__(self, p):
-        self.packet = p
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
-        self.HEADER = self.packet[:4]
-        self.PAYLOAD = self.packet[4:]
-
-        self.SYNC_BYTE = self.HEADER[0]
-        self.TRANSPORT_ERROR_INDICATOR = (self.HEADER[1] & (1 << 7)) >> 7
-        self.PAYLOAD_UNIT_START_INDICATOR = (self.HEADER[1] & (1 << 6)) >> 6
-        self.TRANSPORT_PRIORITY = (self.HEADER[1] & (1 << 5)) >> 5
-        self.PID = ((self.HEADER[1] & 0b11111) << 8) | self.HEADER[2]
-        self.TRANSPORT_SCRAMBLING_CONTROL = (self.HEADER[3] & (0b11 << 6)) >> 6
-        self.ADAPTATION_FIELD_CONTROL = (self.HEADER[3] & (0b11 << 4)) >> 4
-        self.CONTINUITY_COUNT = self.HEADER[3] & 0b1111
-
-        self.PID_TYPE = ""
-
-        if self.PID == 0:
-            self.PID_TYPE = "PAT"
-            self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
-            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
-            self.SECTION_NUMBER = self.PAYLOAD[7]
-            self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
-            self.CRC = self.PAYLOAD[self.SECTION_LENGTH:self.SECTION_LENGTH + 4]
-            self.PROGRAM_NUMBER = []
-            self.PROGRAM_MAP_PID = []
-            for i in range(9, 173, 4):
-                self.PROGRAM_NUMBER.append(self.PAYLOAD[i] << 8 | self.PAYLOAD[i + 1])
-                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i + 2] & 0b11111) << 8 | self.PAYLOAD[i + 3])
-
-        if self.PID == 1:
-            self.PID_TYPE = "CAT"
-        if self.PID == 16:
-            self.PID_TYPE = "NIT"
-        if self.PID == 17:
-            self.PID_TYPE = "SDT"
-            self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2] & 0x80) >> 7
-            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
-            self.SECTION_NUMBER = self.PAYLOAD[7]
-            self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
-            self.ORIGINAL_NETWORK_ID = (self.PAYLOAD[9] << 8) | (self.PAYLOAD[10])
-        elif self.PID == 18:
-            self.PID_TYPE = "NIT"
-        elif self.PID == 20:
-            self.PID_TYPE = "TDT"
-        elif self.PID == 8191:
-            self.PID_TYPE = "NULL Packet"
+    return os.path.join(base_path, relative_path)
 
 
 class UI(QMainWindow):
@@ -75,7 +29,7 @@ class UI(QMainWindow):
         # uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\output\TS.ui", self)
 
         # Import .ui forms for the GUI using function resource_path()
-        ts_ui = self.resource_path("TS.ui")
+        ts_ui = resource_path("main.ui")
         uic.loadUi(ts_ui, self)
 
         self.setFixedSize(876, 431)
@@ -236,7 +190,7 @@ class UI(QMainWindow):
                 self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
         # self.packet_text = ' '.join(self.PACKET)
         # self.text_packet_show.setText(str(self.packet_text))
-        #self.yo = self.PACKET.copy()
+        # self.yo = self.PACKET.copy()
         # self.packet_text = self.packet_text.split(' ')
 
         for i in range(4):
@@ -278,10 +232,10 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
                 self.more_info2 += "Program number: %d => Program map PID: %d\n" % (
                     self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
             self.more_info3 = "Section CRC: %s %s %s %s" % (
-            self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()),
-            self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
-            self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()),
-            self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
+                self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()),
+                self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
+                self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()),
+                self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
             self.text_more_info.setText(self.more_info + "\n\n\n" + self.more_info2 + "\n\n\n" + self.more_info3)
 
 
@@ -321,16 +275,6 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             return string
         else:
             return "0" + string
-
-    def resource_path(self, relative_path):
-        """ Get absolute path to resource, works for dev and for PyInstaller """
-        try:
-            # PyInstaller creates a temp folder and stores path in _MEIPASS
-            base_path = sys._MEIPASS
-        except Exception:
-            base_path = os.path.abspath(".")
-
-        return os.path.join(base_path, relative_path)
 
     def exit(self):
         sys.exit()
