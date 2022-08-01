@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../packet.png</normaloff>../packet.png</iconset>
+    <normaloff>resources/packet.ico</normaloff>resources/packet.ico</iconset>
   </property>
   <property name="iconSize">
    <size>
