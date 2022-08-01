@@ -55,6 +55,7 @@ class UI(QMainWindow):
         self.combo_find.addItem("TDT (20)")
         self.combo_find.activated.connect(self.combo_select)
 
+
         self.show()
 
     def open(self):
@@ -86,6 +87,7 @@ class UI(QMainWindow):
             self.ascii_state = False
             self.packet_index = 0
             self.show_func(self.packet_index)
+
 
 
         except:
@@ -262,13 +264,13 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             self.text_more_info.setText("")
 
     def about(self):
-        self.ui = dialogabout.UId()
-        self.ui.show()
+        self.dialog = dialogabout.DialogAbout()
+        self.dialog.show()
 
     def pid_list(self):
-        self.ui = dialogpidlist.UId()
-        self.ui.packet_count = self.packet_count
-        self.ui.show()
+        self.dialog = dialogpidlist.DialogPidList(self.packet_count)
+        #self.dialog.packet_count = self.packet_count
+        self.dialog.show()
 
     def str_2_char(self, string):
         if len(string) == 2:
