@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidget
 from TS import TS
 import dialogabout
 import dialogpidlist
+import dialogpacketlist
 
 
 def resource_path(relative_path):
@@ -38,6 +39,8 @@ class UI(QMainWindow):
         self.menu_exit.triggered.connect(self.exit)
         self.menu_about.triggered.connect(self.about)
         self.menu_pidlist.triggered.connect(self.pid_list)
+        self.menu_packetlist.triggered.connect(self.packet_list)
+
 
         self.button_goto.clicked.connect(self.go)
 
@@ -269,6 +272,11 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
 
     def pid_list(self):
         self.dialog = dialogpidlist.DialogPidList(self.packet_count)
+        #self.dialog.packet_count = self.packet_count
+        self.dialog.show()
+
+    def packet_list(self):
+        self.dialog = dialogpacketlist.DialogPacketList(self.packet_count)
         #self.dialog.packet_count = self.packet_count
         self.dialog.show()
 
