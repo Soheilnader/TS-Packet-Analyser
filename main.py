@@ -1,10 +1,11 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QFileDialog, QLineEdit, QTextBrowser, \
-    QGroupBox, QRadioButton, QComboBox, QStatusBar, QProgressBar, QTableWidget, QTableWidgetItem, QAction
+import os
+import sys
+
+from PyQt5 import uic
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidgetItem
+
 import dialogabout
 import dialogpidlist
-from PyQt5 import uic
-import sys
-import os
 
 
 class TS:
@@ -28,19 +29,19 @@ class TS:
         if self.PID == 0:
             self.PID_TYPE = "PAT"
             self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1]&(1<<3))>>3
-            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
+            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
             self.CRC = self.PAYLOAD[self.SECTION_LENGTH:self.SECTION_LENGTH + 4]
             self.PROGRAM_NUMBER = []
             self.PROGRAM_MAP_PID = []
-            for i in range(9,173,4):
-                self.PROGRAM_NUMBER.append(self.PAYLOAD[i]<<8|self.PAYLOAD[i+1])
-                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i+2]&0b11111)<<8|self.PAYLOAD[i+3])
+            for i in range(9, 173, 4):
+                self.PROGRAM_NUMBER.append(self.PAYLOAD[i] << 8 | self.PAYLOAD[i + 1])
+                self.PROGRAM_MAP_PID.append((self.PAYLOAD[i + 2] & 0b11111) << 8 | self.PAYLOAD[i + 3])
 
         if self.PID == 1:
             self.PID_TYPE = "CAT"
@@ -49,14 +50,14 @@ class TS:
         if self.PID == 17:
             self.PID_TYPE = "SDT"
             self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2]& 0x80) >> 7
-            self.SECTION_LENGTH = (((self.PAYLOAD[2]&0xF)<<8)|self.PAYLOAD[3])
-            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4]<<8)|(self.PAYLOAD[5])
-            self.VERSION_NUMBER = (self.PAYLOAD[6]&0b111110)>>1
-            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6]&1
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2] & 0x80) >> 7
+            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
+            self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
             self.SECTION_NUMBER = self.PAYLOAD[7]
             self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
-            self.ORIGINAL_NETWORK_ID = (self.PAYLOAD[9] << 8 )|(self.PAYLOAD[10])
+            self.ORIGINAL_NETWORK_ID = (self.PAYLOAD[9] << 8) | (self.PAYLOAD[10])
         elif self.PID == 18:
             self.PID_TYPE = "NIT"
         elif self.PID == 20:
@@ -69,74 +70,29 @@ class UI(QMainWindow):
     def __init__(self):
         super(UI, self).__init__()
 
+        # uic.loadUi(self.resource_path("TS.ui"), self)
+        # uic.loadUi("%s\\TS.ui"%os.getcwd(), self)
+        # uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\output\TS.ui", self)
 
-        #uic.loadUi(self.resource_path("TS.ui"), self)
-        #uic.loadUi("%s\\TS.ui"%os.getcwd(), self)
-        #uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\output\TS.ui", self)
-
-# Import .ui forms for the GUI using function resource_path()
+        # Import .ui forms for the GUI using function resource_path()
         ts_ui = self.resource_path("TS.ui")
         uic.loadUi(ts_ui, self)
 
         self.setFixedSize(876, 431)
-
-        self.statusbar = self.findChild(QStatusBar, "statusbar")
-
-
-        self.menu_open = self.findChild(QAction, "menu_open")
-        self.menu_exit = self.findChild(QAction, "menu_exit")
-        self.menu_about = self.findChild(QAction, "menu_about")
-        self.menu_pidlist = self.findChild(QAction, "menu_pidlist")
-
 
         self.menu_open.triggered.connect(self.open)
         self.menu_exit.triggered.connect(self.exit)
         self.menu_about.triggered.connect(self.about)
         self.menu_pidlist.triggered.connect(self.pid_list)
 
-        self.label_path = self.findChild(QLabel, "label_path")
-        self.entry_path = self.findChild(QLineEdit, "entry_path")
-        self.label_info = self.findChild(QLabel, "label_info")
-        self.entry_info = self.findChild(QLineEdit, "entry_info")
-
-        self.entry_sync_byte = self.findChild(QLineEdit, "entry_sync_byte")
-        self.entry_transport_error_indicator = self.findChild(QLineEdit, "entry_transport_error_indicator")
-        self.entry_payload_unit_start_indicator = self.findChild(QLineEdit, "entry_payload_unit_start_indicator")
-        self.entry_transport_priority = self.findChild(QLineEdit, "entry_transport_priority")
-        self.entry_pid = self.findChild(QLineEdit, "entry_pid")
-        self.entry_transport_scrambling_control = self.findChild(QLineEdit, "entry_transport_scrambling_control")
-        self.entry_adaptation_field_control = self.findChild(QLineEdit, "entry_adaptation_field_control")
-        self.entry_continuity_counter = self.findChild(QLineEdit, "entry_continuity_counter")
-
-        self.label_status = self.findChild(QLabel, "label_status")
-        self.entry_pid_type = self.findChild(QLineEdit, "entry_pid_type")
-
-        self.radiobutton_packet.findChild(QRadioButton, "radiobutton_packet")
-        self.radiobutton_pid.findChild(QRadioButton, "radiobutton_pid")
-
-        self.entry_goto = self.findChild(QLineEdit, "entry_goto")
-        self.button_goto = self.findChild(QPushButton, "button_goto")
         self.button_goto.clicked.connect(self.go)
 
-        #self.text_packet_show = self.findChild(QTextBrowser, "text_packet_show")
-        self.table_show = self.findChild(QTableWidget, "table_show")
-        self.text_more_info = self.findChild(QTextBrowser, "text_more_info")
-
-        self.frame_ts_packet = self.findChild(QGroupBox, "frame_ts_packet")
-
-        self.button_open = self.findChild(QPushButton, "button_open")
         self.button_open.clicked.connect(self.open)
-        self.button_first = self.findChild(QPushButton, "button_first")
         self.button_first.clicked.connect(self.first)
-        self.button_prev = self.findChild(QPushButton, "button_prev")
         self.button_prev.clicked.connect(self.prev)
-        self.button_next = self.findChild(QPushButton, "button_next")
         self.button_next.clicked.connect(self.next)
-        self.button_last = self.findChild(QPushButton, "button_last")
         self.button_last.clicked.connect(self.last)
-        self.button_ascii = self.findChild(QPushButton, "button_ascii")
         self.button_ascii.clicked.connect(self.ascii)
-        self.combo_find = self.findChild(QComboBox, "combo_find")
         self.combo_find.addItem("PAT (0)")
         self.combo_find.addItem("CAT (1)")
         self.combo_find.addItem("NIT (16)")
@@ -144,8 +100,6 @@ class UI(QMainWindow):
         self.combo_find.addItem("EIT (18)")
         self.combo_find.addItem("TDT (20)")
         self.combo_find.activated.connect(self.combo_select)
-
-        self.progress_load = self.findChild(QProgressBar, "progress_load")
 
         self.show()
 
@@ -264,7 +218,7 @@ class UI(QMainWindow):
             self.show_func(self.packet_index)
         except:
             pass
-        
+
     def show_func(self, packet_index):
         self.entry_sync_byte.setText(hex(self.pckt[packet_index].SYNC_BYTE))
         self.entry_transport_error_indicator.setText(str(self.pckt[packet_index].TRANSPORT_ERROR_INDICATOR))
@@ -280,22 +234,21 @@ class UI(QMainWindow):
                 self.PACKET.append(self.str_2_char(hex(self.pckt[packet_index].packet[i])[2:].upper()))
             if self.ascii_state == True:
                 self.PACKET.append(chr(self.pckt[packet_index].packet[i]))
-        #self.packet_text = ' '.join(self.PACKET)
-        #self.text_packet_show.setText(str(self.packet_text))
-        self.yo = self.PACKET.copy()
-        #self.packet_text = self.packet_text.split(' ')
+        # self.packet_text = ' '.join(self.PACKET)
+        # self.text_packet_show.setText(str(self.packet_text))
+        #self.yo = self.PACKET.copy()
+        # self.packet_text = self.packet_text.split(' ')
 
         for i in range(4):
-            self.yo.append(' ')
+            self.PACKET.append(' ')
 
-    #    for i in range(16):
-    #        self.table_show.resizeColumnToContents(i)
-
+        #    for i in range(16):
+        #        self.table_show.resizeColumnToContents(i)
 
         self.table_show.setRowCount(12)
         for i in range(12):
             for j in range(16):
-                self.table_show.setItem(i, j, QTableWidgetItem(self.yo[i*16+j]))
+                self.table_show.setItem(i, j, QTableWidgetItem(self.PACKET[i * 16 + j]))
 
         self.frame_ts_packet.setTitle("TS packet %d" % (packet_index + 1))
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
@@ -323,9 +276,12 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
                 if self.pckt[packet_index].PROGRAM_NUMBER[i] > 10000:
                     continue
                 self.more_info2 += "Program number: %d => Program map PID: %d\n" % (
-                self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
-            self.more_info3 = "Section CRC: %s %s %s %s"  %(self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()), self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
-            self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()), self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
+                    self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
+            self.more_info3 = "Section CRC: %s %s %s %s" % (
+            self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()),
+            self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
+            self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()),
+            self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
             self.text_more_info.setText(self.more_info + "\n\n\n" + self.more_info2 + "\n\n\n" + self.more_info3)
 
 
@@ -364,7 +320,7 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         if len(string) == 2:
             return string
         else:
-            return "0"+string
+            return "0" + string
 
     def resource_path(self, relative_path):
         """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -376,7 +332,6 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
 
         return os.path.join(base_path, relative_path)
 
-            
     def exit(self):
         sys.exit()
 
