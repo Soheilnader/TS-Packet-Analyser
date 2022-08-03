@@ -19,7 +19,7 @@ class TS:
         if self.PID == 0:
             self.PID_TYPE = "PAT"
             self.TABLE_ID = self.PAYLOAD[1]
-            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[1] & (1 << 3)) >> 3
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2] & 0x80) >> 7
             self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
             self.TRANSPORT_STREAM_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
             self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
@@ -35,8 +35,28 @@ class TS:
 
         if self.PID == 1:
             self.PID_TYPE = "CAT"
+            self.TABLE_ID = self.PAYLOAD[1]
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2] & 0x80) >> 7
+            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
+            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
+            self.SECTION_NUMBER = self.PAYLOAD[7]
+            self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
+            self.CRC = self.PAYLOAD[self.SECTION_LENGTH:self.SECTION_LENGTH + 4]
+
         if self.PID == 16:
             self.PID_TYPE = "NIT"
+            self.TABLE_ID = self.PAYLOAD[1]
+            self.SECTION_SYNTAX_INDICATOR = (self.PAYLOAD[2] & 0x80) >> 7
+            self.SECTION_LENGTH = (((self.PAYLOAD[2] & 0xF) << 8) | self.PAYLOAD[3])
+            self.NETWORK_ID = (self.PAYLOAD[4] << 8) | (self.PAYLOAD[5])
+            self.VERSION_NUMBER = (self.PAYLOAD[6] & 0b111110) >> 1
+            self.CURRENT_NEXT_INDICATOR = self.PAYLOAD[6] & 1
+            self.SECTION_NUMBER = self.PAYLOAD[7]
+            self.LAST_SECTION_NUMBER = self.PAYLOAD[8]
+            self.NETWORK_DESCRIPTORS_LENGTH = ((self.PAYLOAD[9] & 0xF) << 8) | self.PAYLOAD[10]
+            self.CRC = self.PAYLOAD[self.SECTION_LENGTH:self.SECTION_LENGTH + 4]
+
         if self.PID == 17:
             self.PID_TYPE = "SDT"
             self.TABLE_ID = self.PAYLOAD[1]
