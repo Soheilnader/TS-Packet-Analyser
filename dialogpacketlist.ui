@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>dialogpacketlist</class>
+ <widget class="QDialog" name="dialogpacketlist">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>823</width>
+    <height>486</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QTableWidget" name="table_packet">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>110</y>
+     <width>771</width>
+     <height>361</height>
+    </rect>
+   </property>
+   <property name="horizontalScrollBarPolicy">
+    <enum>Qt::ScrollBarAsNeeded</enum>
+   </property>
+   <property name="sizeAdjustPolicy">
+    <enum>QAbstractScrollArea::AdjustIgnored</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <column>
+    <property name="text">
+     <string>Packet Type</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Sync Byte</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Transport Error Indicator</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Payload Unit Start Indicator</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Transport priority</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>PID</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Section Number</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Last Section Number</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>771</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Filter</string>
+   </property>
+   <widget class="QCheckBox" name="checkBox_5">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>20</y>
+      <width>111</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Transport priority</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_6">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>20</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PID</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>81</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Packet Type</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_8">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>121</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Last Section Number</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_7">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>20</y>
+      <width>101</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Section Number</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_3">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>20</y>
+      <width>141</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Transport Error Indicator</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_4">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>20</y>
+      <width>161</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Payload Unit Start Indicator</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_2">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>20</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sync byte</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>50</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Apply</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
