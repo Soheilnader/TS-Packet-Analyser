@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>915</width>
-    <height>436</height>
+    <width>877</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -42,7 +42,7 @@
       <x>220</x>
       <y>120</y>
       <width>381</width>
-      <height>261</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="title">
@@ -55,8 +55,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
-       <width>131</width>
+       <y>320</y>
+       <width>111</width>
        <height>20</height>
       </rect>
      </property>
@@ -70,14 +70,26 @@
        <x>10</x>
        <y>20</y>
        <width>361</width>
-       <height>201</height>
+       <height>291</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="font">
       <font>
        <family>Courier New</family>
        <pointsize>8</pointsize>
       </font>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
      </property>
      <property name="lineWidth">
       <number>0</number>
@@ -93,6 +105,9 @@
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="defaultDropAction">
+      <enum>Qt::CopyAction</enum>
      </property>
      <property name="verticalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
@@ -173,7 +188,7 @@
      </row>
      <row>
       <property name="text">
-       <string>12</string>
+       <string>11</string>
       </property>
      </row>
      <row>
@@ -262,6 +277,63 @@
       </property>
      </column>
     </widget>
+    <widget class="QRadioButton" name="radiobutton_table">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>320</y>
+       <width>81</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Table view</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radiobutton_text">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>320</y>
+       <width>71</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Text view</string>
+     </property>
+    </widget>
+    <widget class="QTextBrowser" name="text_show">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>361</width>
+       <height>291</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Courier New</family>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Courier New'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <zorder>entry_pid_type</zorder>
+    <zorder>radiobutton_table</zorder>
+    <zorder>radiobutton_text</zorder>
+    <zorder>text_show</zorder>
+    <zorder>table_show</zorder>
    </widget>
    <widget class="QGroupBox" name="frame_ts_file">
     <property name="geometry">
@@ -360,7 +432,7 @@
       <x>610</x>
       <y>50</y>
       <width>256</width>
-      <height>321</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="html">
@@ -416,7 +488,7 @@ p, li { white-space: pre-wrap; }
       <x>10</x>
       <y>150</y>
       <width>201</width>
-      <height>191</height>
+      <height>211</height>
      </rect>
     </property>
     <property name="title">
@@ -426,7 +498,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>30</y>
        <width>47</width>
        <height>13</height>
       </rect>
@@ -439,7 +511,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>50</y>
        <width>121</width>
        <height>16</height>
       </rect>
@@ -452,7 +524,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
+       <y>70</y>
        <width>131</width>
        <height>16</height>
       </rect>
@@ -465,7 +537,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>90</y>
        <width>91</width>
        <height>16</height>
       </rect>
@@ -478,7 +550,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>110</y>
        <width>21</width>
        <height>16</height>
       </rect>
@@ -491,7 +563,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>120</y>
+       <y>130</y>
        <width>141</width>
        <height>16</height>
       </rect>
@@ -504,7 +576,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>140</y>
+       <y>150</y>
        <width>111</width>
        <height>16</height>
       </rect>
@@ -517,7 +589,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>160</y>
+       <y>170</y>
        <width>91</width>
        <height>16</height>
       </rect>
@@ -530,7 +602,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>20</y>
+       <y>30</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -543,7 +615,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>40</y>
+       <y>50</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -556,7 +628,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>60</y>
+       <y>70</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -569,7 +641,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>80</y>
+       <y>90</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -582,7 +654,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>100</y>
+       <y>110</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -595,7 +667,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>120</y>
+       <y>130</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -608,7 +680,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>140</y>
+       <y>150</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -621,7 +693,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>160</y>
+       <y>170</y>
        <width>41</width>
        <height>20</height>
       </rect>
@@ -730,24 +802,37 @@ p, li { white-space: pre-wrap; }
      </property>
     </item>
    </widget>
-   <widget class="QProgressBar" name="progress_load">
+   <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>350</y>
+      <x>10</x>
+      <y>370</y>
       <width>201</width>
-      <height>23</height>
+      <height>101</height>
      </rect>
     </property>
-    <property name="maximum">
-     <number>180</number>
+    <property name="title">
+     <string>File Load</string>
     </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="format">
-     <string>%p%</string>
-    </property>
+    <widget class="QProgressBar" name="progress_load">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>191</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>180</number>
+     </property>
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="format">
+      <string>%p%</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -755,7 +840,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>915</width>
+     <width>877</width>
      <height>21</height>
     </rect>
    </property>
