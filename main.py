@@ -276,7 +276,7 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         self.dialog.show()
 
     def packet_list(self):
-        self.dialog = dialogpacketlist.DialogPacketList(self.packet_count)
+        self.dialog = dialogpacketlist.DialogPacketList(self.pckt)
         #self.dialog.packet_count = self.packet_count
         self.dialog.show()
 
