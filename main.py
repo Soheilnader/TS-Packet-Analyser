@@ -33,7 +33,8 @@ class UI(QMainWindow):
         ts_ui = resource_path("main.ui")
         uic.loadUi(ts_ui, self)
 
-        self.setFixedSize(876, 431)
+        self.setFixedSize(877, 525)
+        self.table_text_status = True
 
         self.menu_open.triggered.connect(self.open)
         self.menu_exit.triggered.connect(self.exit)
@@ -58,7 +59,11 @@ class UI(QMainWindow):
         self.combo_find.addItem("TDT (20)")
         self.combo_find.activated.connect(self.combo_select)
 
-
+        #self.button_open_in_text.clicked.connect(self.open_in_text)
+        #self.radiobutton_table.toggled.connect(self.table_radio)
+        #self.radiobutton_text.toggled.connect(self.text_radio)
+        self.radiobutton_table.toggled.connect(self.table_text_toggle)
+        self.radiobutton_text.toggled.connect(self.table_text_toggle)
         self.show()
 
     def open(self):
@@ -203,11 +208,23 @@ class UI(QMainWindow):
 
         #    for i in range(16):
         #        self.table_show.resizeColumnToContents(i)
+        if self.table_text_status == True:
+            self.text_show.hide()
+            self.table_show.show()
+            self.table_show.setRowCount(12)
+            for i in range(12):
+                for j in range(16):
+                    self.table_show.setItem(i, j, QTableWidgetItem(self.PACKET[i * 16 + j]))
 
-        self.table_show.setRowCount(12)
-        for i in range(12):
-            for j in range(16):
-                self.table_show.setItem(i, j, QTableWidgetItem(self.PACKET[i * 16 + j]))
+        if self.table_text_status == False:
+            self.table_show.hide()
+            text = ""
+            for i in range(188):
+                if i % 16 == 0 and i > 0:
+                    text += "\n"
+                text += '{} '.format(str(self.PACKET[i]))
+            self.text_show.setText(text)
+            self.text_show.show()
 
         self.frame_ts_packet.setTitle("TS packet %d" % (packet_index + 1))
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
@@ -279,6 +296,29 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         self.dialog = dialogpacketlist.DialogPacketList(self.pckt)
         #self.dialog.packet_count = self.packet_count
         self.dialog.show()
+
+
+    def text_radio(self):
+        self.table_text_status = False
+        print("Text")
+
+    def table_text_toggle(self):
+        if self.radiobutton_table.isChecked():
+            self.table_text_status = True
+            print(self.table_text_status)
+            try:
+                self.show_func(self.packet_index)
+            except:
+                self.table_show.show()
+                self.text_show.hide()
+        if self.radiobutton_text.isChecked():
+            self.table_text_status = False
+            print(self.table_text_status)
+            try:
+                self.show_func(self.packet_index)
+            except:
+                self.table_show.hide()
+                self.text_show.show()
 
     def str_2_char(self, string):
         if len(string) == 2:
