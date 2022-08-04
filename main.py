@@ -235,7 +235,7 @@ Section syntax indicator: %d
 Section length: %d
 Transport stream id: %d
 Version number: %d
-Current next: %d
+Current/next indicator: %d
 Section number: %d
 Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
                               self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
@@ -249,8 +249,6 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             self.more_info2 = ""
             self.more_info3 = ""
             for i in range(len(self.pckt[packet_index].PROGRAM_NUMBER)):
-                if self.pckt[packet_index].PROGRAM_NUMBER[i] > 10000:
-                    continue
                 self.more_info2 += "Program number: %d => Program map PID: %d\n" % (
                     self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
             self.more_info3 = "Section CRC: %s %s %s %s" % (
