@@ -29,7 +29,7 @@ class TS:
             self.CRC = self.PAYLOAD[self.SECTION_LENGTH:self.SECTION_LENGTH + 4]
             self.PROGRAM_NUMBER = []
             self.PROGRAM_MAP_PID = []
-            for i in range(9, 173, 4):
+            for i in range(9, self.SECTION_LENGTH, 4):
                 self.PROGRAM_NUMBER.append(self.PAYLOAD[i] << 8 | self.PAYLOAD[i + 1])
                 self.PROGRAM_MAP_PID.append((self.PAYLOAD[i + 2] & 0b11111) << 8 | self.PAYLOAD[i + 3])
 
@@ -74,3 +74,8 @@ class TS:
             self.PID_TYPE = "TDT"
         elif self.PID == 8191:
             self.PID_TYPE = "NULL Packet"
+
+        else:
+            self.TABLE_ID = self.PAYLOAD[1]
+            if self.TABLE_ID == 2:
+                self.PID_TYPE = "PMT"
