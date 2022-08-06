@@ -299,7 +299,7 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         self.dialog.show()
 
     def remux(self):
-        self.dialog = dialogremux.DialogRemux()
+        self.dialog = dialogremux.DialogRemux(self.pckt)
         #self.dialog.packet_count = self.packet_count
         self.dialog.show()
 
