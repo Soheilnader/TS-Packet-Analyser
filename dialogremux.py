@@ -14,16 +14,26 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-class DialogAbout(QDialog):
+class DialogRemux(QDialog):
     def __init__(self):
-        super(DialogAbout, self).__init__()
+        super(DialogRemux, self).__init__()
 
         #uic.loadUi(r"C:\Users\Soheil\Desktop\TS QT\dialogabout.ui", self)
         super().__init__()
-        ts_ui = resource_path("dialogabout.ui")
+        ts_ui = resource_path("dialogremux.ui")
         uic.loadUi(ts_ui, self)
 
+        self.button_remux.clicked.connect(self.re_mux)
+
+
+
         self.setFixedSize(378, 322)
+
+    def re_mux(self):
+        print("Remux")
+        print(self.list_PID.selectedItems())
+        for i in self.list_PID.selectedItems():
+            print(i.text())
 
         self.show()
 

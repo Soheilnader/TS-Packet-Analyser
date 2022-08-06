@@ -8,6 +8,7 @@ from TS import TS
 import dialogabout
 import dialogpidlist
 import dialogpacketlist
+import dialogremux
 
 
 def resource_path(relative_path):
@@ -41,6 +42,8 @@ class UI(QMainWindow):
         self.menu_about.triggered.connect(self.about)
         self.menu_pidlist.triggered.connect(self.pid_list)
         self.menu_packetlist.triggered.connect(self.packet_list)
+        self.menu_remux.triggered.connect(self.remux)
+
 
 
         self.button_goto.clicked.connect(self.go)
@@ -295,6 +298,10 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         #self.dialog.packet_count = self.packet_count
         self.dialog.show()
 
+    def remux(self):
+        self.dialog = dialogremux.DialogRemux()
+        #self.dialog.packet_count = self.packet_count
+        self.dialog.show()
 
     def text_radio(self):
         self.table_text_status = False

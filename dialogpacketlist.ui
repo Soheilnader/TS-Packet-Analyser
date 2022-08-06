@@ -96,6 +96,9 @@
     <property name="text">
      <string>Transport priority</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_6">
     <property name="geometry">
@@ -109,8 +112,11 @@
     <property name="text">
      <string>PID</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="checkBox_1">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -121,6 +127,9 @@
     </property>
     <property name="text">
      <string>Packet Type</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_8">
@@ -135,6 +144,9 @@
     <property name="text">
      <string>Last Section Number</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_7">
     <property name="geometry">
@@ -147,6 +159,9 @@
     </property>
     <property name="text">
      <string>Section Number</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_3">
@@ -161,6 +176,9 @@
     <property name="text">
      <string>Transport Error Indicator</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_4">
     <property name="geometry">
@@ -173,6 +191,9 @@
     </property>
     <property name="text">
      <string>Payload Unit Start Indicator</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_2">
@@ -187,8 +208,11 @@
     <property name="text">
      <string>Sync byte</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="button_apply">
     <property name="geometry">
      <rect>
       <x>690</x>

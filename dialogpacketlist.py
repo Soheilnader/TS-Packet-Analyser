@@ -41,9 +41,19 @@ class DialogPacketList(QDialog):
                 self.table_packet.setItem(row, 6, QTableWidgetItem(str(pckt[i].SECTION_NUMBER)))
                 self.table_packet.setItem(row, 7, QTableWidgetItem(str(pckt[i].LAST_SECTION_NUMBER)))
 
+                if pckt[i].PID_TYPE == "PAT":
+                    for j in range(8):
+                        self.table_packet.item(row, j).setBackground(QtGui.QColor(255, 204, 223))
+                if pckt[i].PID_TYPE == "SDT":
+                    for j in range(8):
+                        self.table_packet.item(row, j).setBackground(QtGui.QColor(173, 216, 230))
+                if pckt[i].PID_TYPE == "PMT":
+                    for j in range(8):
+                        self.table_packet.item(row, j).setBackground(QtGui.QColor(252, 232, 131))
             except:
                 pass
             row += 1
+
 
         #self.table_packet.setItem(3, 2, QtGui.QTableWidgetItem())
         #self.table_packet.item(3, 2).setBackground(QtGui.QColor(100, 100, 100))
@@ -66,7 +76,21 @@ class DialogPacketList(QDialog):
 
         self.setFixedSize(823, 486)
 
+        self.button_apply.clicked.connect(self.apply)
+
+
         self.show()
+
+    def apply(self):
+        self.table_packet.setColumnHidden(0,not(self.checkBox_1.isChecked()))
+        self.table_packet.setColumnHidden(1,not(self.checkBox_2.isChecked()))
+        self.table_packet.setColumnHidden(2,not(self.checkBox_3.isChecked()))
+        self.table_packet.setColumnHidden(3,not(self.checkBox_4.isChecked()))
+        self.table_packet.setColumnHidden(4,not(self.checkBox_5.isChecked()))
+        self.table_packet.setColumnHidden(5,not(self.checkBox_6.isChecked()))
+        self.table_packet.setColumnHidden(6,not(self.checkBox_7.isChecked()))
+        self.table_packet.setColumnHidden(7,not(self.checkBox_8.isChecked()))
+
 
 # about_dialog = QApplication(sys.argv)
 
