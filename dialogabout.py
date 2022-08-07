@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import QDialog
 from PyQt5 import uic
+from PyQt5.QtGui import QPixmap
+
 import sys
 import os
 
@@ -23,7 +25,17 @@ class DialogAbout(QDialog):
         ts_ui = resource_path("dialogabout.ui")
         uic.loadUi(ts_ui, self)
 
-        self.setFixedSize(378, 322)
+        self.setFixedSize(420, 350)
+
+        pic1 = QPixmap(resource_path("logo1.png"))
+        pic2 = QPixmap(resource_path("logo2.png"))
+        pic3 = QPixmap(resource_path("logo3.png"))
+        pic4 = QPixmap(resource_path("packet.ico"))
+
+        self.label_2.setPixmap(pic1)
+        self.label.setPixmap(pic2)
+        self.label_7.setPixmap(pic3)
+        self.label_5.setPixmap(pic4)
 
         self.show()
 
