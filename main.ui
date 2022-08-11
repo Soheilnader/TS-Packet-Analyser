@@ -904,8 +904,15 @@ p, li { white-space: pre-wrap; }
     <addaction name="menu_packetlist"/>
     <addaction name="menu_remux"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <addaction name="menu_display"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
+   <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
@@ -948,6 +955,11 @@ p, li { white-space: pre-wrap; }
   <action name="menu_packetlist">
    <property name="text">
     <string>Packet list</string>
+   </property>
+  </action>
+  <action name="menu_display">
+   <property name="text">
+    <string>Display ...</string>
    </property>
   </action>
  </widget>

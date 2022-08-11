@@ -4,6 +4,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidgetItem
 
+import dialogdisplay
 from TS import TS
 import dialogabout
 import dialogpidlist
@@ -37,12 +38,31 @@ class UI(QMainWindow):
         self.setFixedSize(877, 525)
         self.table_text_status = True
 
+
+
+        try:
+            with open("config.ini", "r") as f:
+                c = f.read()
+                self.config = c.split('\n')
+        except:
+            with open("config.ini", "w") as f:
+                SYNC_BYTE_DEC = False
+                PID_DEC = True
+                CONTINUITY_COUNT_DEC = True
+                f.write(str(SYNC_BYTE_DEC))
+                f.write('\n')
+                f.write(str(PID_DEC))
+                f.write('\n')
+                f.write(str(CONTINUITY_COUNT_DEC))
+
+
         self.menu_open.triggered.connect(self.open)
         self.menu_exit.triggered.connect(self.exit)
         self.menu_about.triggered.connect(self.about)
         self.menu_pidlist.triggered.connect(self.pid_list)
         self.menu_packetlist.triggered.connect(self.packet_list)
         self.menu_remux.triggered.connect(self.remux)
+        self.menu_display.triggered.connect(self.display)
 
 
 
@@ -187,14 +207,41 @@ class UI(QMainWindow):
             pass
 
     def show_func(self, packet_index):
-        self.entry_sync_byte.setText(hex(self.pckt[packet_index].SYNC_BYTE))
+
+        try:
+            with open("config.ini", "r") as f:
+                c = f.read()
+                self.config = c.split('\n')
+        except:
+            with open("config.ini", "w") as f:
+                SYNC_BYTE_DEC = False
+                PID_DEC = True
+                CONTINUITY_COUNT_DEC = True
+                f.write(str(SYNC_BYTE_DEC))
+                f.write('\n')
+                f.write(str(PID_DEC))
+                f.write('\n')
+                f.write(str(CONTINUITY_COUNT_DEC))
+
+
+        if self.config[0] == "True":
+            self.entry_sync_byte.setText(str(self.pckt[packet_index].SYNC_BYTE))
+        if self.config[0] == "False":
+            self.entry_sync_byte.setText(hex(self.pckt[packet_index].SYNC_BYTE))
         self.entry_transport_error_indicator.setText(str(self.pckt[packet_index].TRANSPORT_ERROR_INDICATOR))
         self.entry_payload_unit_start_indicator.setText(str(self.pckt[packet_index].PAYLOAD_UNIT_START_INDICATOR))
         self.entry_transport_priority.setText(str(self.pckt[packet_index].TRANSPORT_PRIORITY))
-        self.entry_pid.setText(str(self.pckt[packet_index].PID))
+        if self.config[1] == "True":
+            self.entry_pid.setText(str(self.pckt[packet_index].PID))
+        if self.config[1] == "False":
+            self.entry_pid.setText(hex(self.pckt[packet_index].PID))
         self.entry_transport_scrambling_control.setText(str(self.pckt[packet_index].TRANSPORT_SCRAMBLING_CONTROL))
         self.entry_adaptation_field_control.setText(str(self.pckt[packet_index].ADAPTATION_FIELD_CONTROL))
-        self.entry_continuity_counter.setText(str(self.pckt[packet_index].CONTINUITY_COUNT))
+        if self.config[2] == "True":
+            self.entry_continuity_counter.setText(str(self.pckt[packet_index].CONTINUITY_COUNT))
+        if self.config[1] == "False":
+            self.entry_continuity_counter.setText(hex(self.pckt[packet_index].CONTINUITY_COUNT))
+
         self.PACKET = []
         for i in range(188):
             if self.ascii_state == False:
@@ -320,6 +367,15 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         #self.dialog.packet_count = self.packet_count
         self.dialog.show()
 
+    def display(self):
+        self.dialog = dialogdisplay.DialogDisplay()
+        self.dialog.show()
+        if self.dialog.exec_() == 0:
+            try:
+                self.show_func(self.packet_index)
+            except:
+                pass
+
     def text_radio(self):
         self.table_text_status = False
         print("Text")
@@ -347,6 +403,7 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             return string
         else:
             return "0" + string
+
 
     def exit(self):
         sys.exit()
