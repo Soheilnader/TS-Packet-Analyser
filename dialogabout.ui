@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>349</height>
+    <width>417</width>
+    <height>348</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,7 +41,7 @@
   <widget class="QTextBrowser" name="textBrowser">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>110</y>
      <width>281</width>
      <height>91</height>
@@ -56,26 +56,10 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This software was an intership project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>210</y>
-     <width>91</width>
-     <height>101</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-   <property name="scaledContents">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>60</x>
      <y>210</y>
      <width>91</width>
      <height>101</height>
@@ -92,8 +76,8 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>310</y>
-     <width>151</width>
+     <y>120</y>
+     <width>121</width>
      <height>16</height>
     </rect>
    </property>
@@ -126,7 +110,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>0</y>
      <width>131</width>
      <height>31</height>
@@ -146,7 +130,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>320</x>
+     <x>280</x>
      <y>210</y>
      <width>91</width>
      <height>101</height>
@@ -163,7 +147,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>320</y>
+     <y>140</y>
      <width>151</width>
      <height>16</height>
     </rect>
@@ -178,7 +162,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>90</y>
      <width>151</width>
      <height>16</height>
@@ -210,7 +194,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>30</y>
      <width>71</width>
      <height>16</height>
@@ -226,7 +210,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>70</y>
      <width>191</width>
      <height>16</height>
@@ -242,7 +226,7 @@ p, li { white-space: pre-wrap; }
   <widget class="QLabel" name="label_12">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>130</x>
      <y>50</y>
      <width>181</width>
      <height>16</height>
@@ -250,6 +234,38 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Intership professor: Dr. Roozbehani</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>310</y>
+     <width>141</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>جهاد دانشگاهی خواجه نصیر</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>141</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>دانشگاه علم و فرهنگ</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>

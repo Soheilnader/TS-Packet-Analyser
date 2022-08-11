@@ -284,6 +284,23 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         else:
             self.text_more_info.setText("")
 
+
+        if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 0:
+            self.entry_adaptation_status.setText("ISO")
+            self.entry_adaptation_byte_count.setText("")
+        if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 1:
+            self.entry_adaptation_status.setText("No adaptation field, payload only")
+            self.entry_adaptation_byte_count.setText("")
+        if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 2:
+            self.entry_adaptation_status.setText("Adaptation field only, No payload")
+            self.entry_adaptation_byte_count.setText(str(self.pckt[packet_index].ADAPTATION_FIELD_LENGTH+1))
+            self.text_more_info.setText(self.pckt[packet_index].INFO)
+        if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 3:
+            self.entry_adaptation_status.setText("Adaptation field followed by payload")
+            self.entry_adaptation_byte_count.setText(str(self.pckt[packet_index].ADAPTATION_FIELD_LENGTH+1))
+            self.text_more_info.setText(self.pckt[packet_index].INFO)
+
+
     def about(self):
         self.dialog = dialogabout.DialogAbout()
         self.dialog.show()

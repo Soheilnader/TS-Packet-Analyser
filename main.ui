@@ -802,37 +802,76 @@ p, li { white-space: pre-wrap; }
      </property>
     </item>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>370</y>
       <width>201</width>
-      <height>101</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="title">
-     <string>File Load</string>
+     <string>Adaptation</string>
     </property>
-    <widget class="QProgressBar" name="progress_load">
+    <widget class="QLineEdit" name="entry_adaptation_byte_count">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>20</y>
+       <width>41</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_adaptation_byte_count">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
-       <width>191</width>
-       <height>21</height>
+       <y>20</y>
+       <width>121</width>
+       <height>16</height>
       </rect>
      </property>
-     <property name="maximum">
-      <number>180</number>
-     </property>
-     <property name="value">
-      <number>0</number>
-     </property>
-     <property name="format">
-      <string>%p%</string>
+     <property name="text">
+      <string>Adaptation byte count</string>
      </property>
     </widget>
+    <widget class="QLineEdit" name="entry_adaptation_status">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>181</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QProgressBar" name="progress_load">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>450</y>
+      <width>191</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>180</number>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+    <property name="format">
+     <string>%p%</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

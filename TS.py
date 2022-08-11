@@ -14,7 +14,37 @@ class TS:
         self.ADAPTATION_FIELD_CONTROL = (self.HEADER[3] & (0b11 << 4)) >> 4
         self.CONTINUITY_COUNT = self.HEADER[3] & 0b1111
 
+        self.INFO = ""
         self.PID_TYPE = ""
+        self.ADAPTATION_FIELD_LENGTH = 0
+
+        if self.ADAPTATION_FIELD_CONTROL == 2 or self.ADAPTATION_FIELD_CONTROL == 3:
+            self.ADAPTATION_FIELD_LENGTH = self.PAYLOAD[0]
+            self.DISCONTINUITY_INDICATOR = (self.PAYLOAD[1] & 0x80) >> 7
+            self.RANDOM_ACCESS_INDICATOR = (self.PAYLOAD[1] & 0x40) >> 6
+            self.ELEMENTARY_STREAM_PRIORITY_INDICATOR = (self.PAYLOAD[1] & 0x20) >> 5
+            self.FIVE_FLAGS = self.PAYLOAD[1] & 0x1F
+            self.PCR_FLAG = (self.FIVE_FLAGS & 0x10) >> 4
+            self.OPCR_FLAG = (self.FIVE_FLAGS & 0x8) >> 3
+            self.SPLICING_POINT_FLAG = (self.FIVE_FLAGS & 0x4) >> 2
+            self.TRANSPORT_PRIVATE_DATA_FLAG = (self.FIVE_FLAGS & 0x2) >> 1
+            self.ADAPTATION_FIELD_EXTENSION_FLAG = self.FIVE_FLAGS & 0x1
+            self.INFO = """Adaptation fields
+   Adaptation_field_length: %d
+   discontinuity_indicator: %s
+   random_access_indicator: %s
+   ES_priority_indicator: %s
+   PCR_flag: %s
+   OPCR_flag: %s
+   splicing_point_flag: %s
+   transport_private_data_flag: %s
+   adaptation_field_extension_flag: %s""" %(self.ADAPTATION_FIELD_LENGTH, bool(self.DISCONTINUITY_INDICATOR),
+                                            bool(self.RANDOM_ACCESS_INDICATOR), bool(self.ELEMENTARY_STREAM_PRIORITY_INDICATOR),
+                                            bool(self.PCR_FLAG), bool(self.OPCR_FLAG), bool(self.SPLICING_POINT_FLAG),
+                                            bool(self.TRANSPORT_PRIVATE_DATA_FLAG), bool(self.ADAPTATION_FIELD_EXTENSION_FLAG))
+
+ #           if self.PCR_FLAG ==1:
+ #               self.PCR = (self.PAYLOAD[2]) | (self.PAYLOAD[3]) | (self.PAYLOAD[4]) | (self.PAYLOAD[5]) | self.
 
         if self.PID == 0:
             self.PID_TYPE = "PAT"

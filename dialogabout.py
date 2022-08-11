@@ -27,13 +27,11 @@ class DialogAbout(QDialog):
 
         self.setFixedSize(420, 350)
 
-        pic1 = QPixmap(resource_path("logo1.png"))
-        pic2 = QPixmap(resource_path("logo2.png"))
-        pic3 = QPixmap(resource_path("logo3.png"))
-        pic4 = QPixmap(resource_path("packet.ico"))
+        pic1 = QPixmap(resource_path(r"resources\logo1.png"))
+        pic3 = QPixmap(resource_path(r"resources\logo3.png"))
+        pic4 = QPixmap(resource_path(r"resources\packet.ico"))
 
         self.label_2.setPixmap(pic1)
-        self.label.setPixmap(pic2)
         self.label_7.setPixmap(pic3)
         self.label_5.setPixmap(pic4)
 
