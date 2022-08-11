@@ -2,7 +2,7 @@ import os
 import sys
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidgetItem, QMessageBox
 
 import dialogdisplay
 from TS import TS
@@ -99,6 +99,7 @@ class UI(QMainWindow):
             self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))
 
             self.pckt = []
+            self.pid_type_list = set()
             self.packet_count = [0 for i in range(8192)]
             with open(self.path[0], "rb") as f:
                 for j in range(self.number_of_packets):
@@ -113,6 +114,7 @@ class UI(QMainWindow):
                         self.statusbar.showMessage("Loading...")
                     self.pckt.append(TS(lst))
                     self.packet_count[self.pckt[j].PID] += 1
+                    self.pid_type_list.add(self.pckt[j].PID)
 
             self.statusbar.showMessage("Ready")
             self.ascii_state = False
@@ -166,10 +168,19 @@ class UI(QMainWindow):
                 self.packet_index = int(self.entry_goto.text()) - 1
 
             if self.radiobutton_pid.isChecked():
-                for i in range(self.number_of_packets):
-                    if self.pckt[i].PID == int(self.entry_goto.text()):
-                        self.packet_index = i
-                        break
+                if int(self.entry_goto.text()) not in self.pid_type_list:
+                    msg = QMessageBox()
+                    msg.setWindowTitle("Error!")
+                    msg.setText("PID=%d not found!" %int(self.entry_goto.text()))
+                    msg.setIcon(QMessageBox.Critical)
+                    x = msg.exec_()
+
+                else:
+                    for i in range(self.number_of_packets):
+                        if self.pckt[i].PID == int(self.entry_goto.text()):
+                            self.packet_index = i
+                            break
+
             self.show_func(self.packet_index)
         except:
             pass
@@ -198,6 +209,13 @@ class UI(QMainWindow):
                 self.combo_find_pid = 20
             else:
                 pass
+            if self.combo_find_pid not in self.pid_type_list:
+                msg = QMessageBox()
+                msg.setWindowTitle("Error!")
+                msg.setText("%s not found!" % self.combo_state)
+                msg.setIcon(QMessageBox.Critical)
+                x = msg.exec_()
+
             for i in range(self.number_of_packets):
                 if self.pckt[i].PID == self.combo_find_pid:
                     self.packet_index = i
