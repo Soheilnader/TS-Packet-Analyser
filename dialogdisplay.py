@@ -26,7 +26,7 @@ class DialogDisplay(QDialog):
         ts_ui = resource_path("dialogdisplay.ui")
         uic.loadUi(ts_ui, self)
 
-        self.setFixedSize(160, 185)
+        self.setFixedSize(176, 216)
 
 
         try:
@@ -43,6 +43,10 @@ class DialogDisplay(QDialog):
 
         print(self.SYNC_BYTE_DEC, self.PID_DEC, self.CONTINUITY_COUNT_DEC)
 
+        self.button_cancel.clicked.connect(self.exit)
+        self.button_apply.clicked.connect(self.apply)
+
+
         self.radio_sync_byte_dec.setChecked(self.SYNC_BYTE_DEC)
         self.radio_sync_byte_hex.setChecked(not(self.SYNC_BYTE_DEC))
         self.radio_pid_dec.setChecked(self.PID_DEC)
@@ -50,12 +54,6 @@ class DialogDisplay(QDialog):
         self.radio_continuity_counter_dec.setChecked(self.CONTINUITY_COUNT_DEC)
         self.radio_continuity_counter_hex.setChecked(not(self.CONTINUITY_COUNT_DEC))
 
-        self.radio_sync_byte_dec.toggled.connect(self.apply)
-        self.radio_sync_byte_hex.toggled.connect(self.apply)
-        self.radio_pid_dec.toggled.connect(self.apply)
-        self.radio_pid_hex.toggled.connect(self.apply)
-        self.radio_continuity_counter_dec.toggled.connect(self.apply)
-        self.radio_continuity_counter_hex.toggled.connect(self.apply)
 
     def apply(self):
         print("Apply")
@@ -71,6 +69,7 @@ class DialogDisplay(QDialog):
 
         except:
             pass
+        self.close()
 
     def str_to_bool(self, s):
         if s == 'True':
@@ -80,6 +79,8 @@ class DialogDisplay(QDialog):
 
         self.show()
 
+    def exit(self):
+        self.close()
 # about_dialog = QApplication(sys.argv)
 
 # UIdialog = UId()

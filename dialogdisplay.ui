@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>185</width>
-    <height>209</height>
+    <width>176</width>
+    <height>216</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>141</width>
+     <width>151</width>
      <height>171</height>
     </rect>
    </property>
@@ -30,7 +30,7 @@
      <rect>
       <x>10</x>
       <y>120</y>
-      <width>121</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -42,7 +42,7 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>82</width>
+       <width>51</width>
        <height>17</height>
       </rect>
      </property>
@@ -56,7 +56,7 @@
     <widget class="QRadioButton" name="radio_continuity_counter_hex">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>80</x>
        <y>20</y>
        <width>41</width>
        <height>17</height>
@@ -72,7 +72,7 @@
      <rect>
       <x>10</x>
       <y>70</y>
-      <width>121</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -98,7 +98,7 @@
     <widget class="QRadioButton" name="radio_pid_hex">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>80</x>
        <y>20</y>
        <width>41</width>
        <height>17</height>
@@ -114,7 +114,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>121</width>
+      <width>131</width>
       <height>41</height>
      </rect>
     </property>
@@ -137,7 +137,7 @@
     <widget class="QRadioButton" name="radio_sync_byte_hex">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>80</x>
        <y>20</y>
        <width>41</width>
        <height>17</height>
@@ -151,6 +151,32 @@
      </property>
     </widget>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="button_apply">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>190</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Apply</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="button_cancel">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>190</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Cancel</string>
+   </property>
   </widget>
  </widget>
  <resources/>

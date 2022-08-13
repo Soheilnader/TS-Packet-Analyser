@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidget
 
 import dialogdisplay
 from TS import TS
+import SDT
 import dialogabout
 import dialogpidlist
 import dialogpacketlist
@@ -91,40 +92,56 @@ class UI(QMainWindow):
 
     def open(self):
         print("Open")
-        try:
-            self.path = QFileDialog.getOpenFileName(self, "Open File", "", "TS Files (*.ts)")
-            self.entry_path.setText(self.path[0])
-            self.file_size = os.path.getsize(self.path[0])
-            self.number_of_packets = int(self.file_size / 188)
-            self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))
+        #try:
+        self.path = QFileDialog.getOpenFileName(self, "Open File", "", "TS Files (*.ts)")
+        self.entry_path.setText(self.path[0])
+        self.file_size = os.path.getsize(self.path[0])
+        self.number_of_packets = int(self.file_size / 188)
+        self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))
 
-            self.pckt = []
-            self.pid_type_list = set()
-            self.packet_count = [0 for i in range(8192)]
-            with open(self.path[0], "rb") as f:
-                for j in range(self.number_of_packets):
-                    lst = []
-                    for i in range(188):
-                        bytes = ord(f.read(1))
-                        # print(hex(ord(txt)))
-                        lst.append(bytes)
-                    self.progress_load.setRange(0, int(self.file_size / 188 - 1))
-                    self.progress_load.setValue(j)
-                    if j < self.number_of_packets:
-                        self.statusbar.showMessage("Loading...")
-                    self.pckt.append(TS(lst))
-                    self.packet_count[self.pckt[j].PID] += 1
-                    self.pid_type_list.add(self.pckt[j].PID)
+        self.pckt = []
+        self.pid_type_list = set()
+        self.sdt_pckt = []
+        self.sdt = []
+        self.packet_count = [0 for i in range(8192)]
+        with open(self.path[0], "rb") as f:
+            for j in range(self.number_of_packets):
+                lst = []
+                for i in range(188):
+                    bytes = ord(f.read(1))
+                    # print(hex(ord(txt)))
+                    lst.append(bytes)
+                self.progress_load.setRange(0, int(self.file_size / 188 - 1))
+                self.progress_load.setValue(j)
+                if j < self.number_of_packets:
+                    self.statusbar.showMessage("Loading...")
+                self.pckt.append(TS(lst))
+                self.packet_count[self.pckt[j].PID] += 1
+                self.pid_type_list.add(self.pckt[j].PID)
+                if self.pckt[j].PID == 17:
+                    if self.pckt[j].PAYLOAD not in self.sdt_pckt:
+                        self.sdt_pckt.append(self.pckt[j].return_payload())
+                        self.sdt += self.pckt[j].return_payload()
 
-            self.statusbar.showMessage("Ready")
-            self.ascii_state = False
-            self.packet_index = 0
-            self.show_func(self.packet_index)
+        self.statusbar.showMessage("Ready")
+        self.ascii_state = False
+        self.packet_index = 0
 
 
 
-        except:
-            pass
+        print(len(self.sdt))
+        print(self.sdt)
+
+        self.SDT_P = SDT.SDT(self.sdt)
+        print(len(self.SDT_P.PAYLOAD))
+        print(self.SDT_P.PROGRAM_NAME)
+        self.show_func(self.packet_index)
+
+
+
+    #    except:
+    #        pass
+
 
     def first(self):
         try:
@@ -328,23 +345,7 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
 
 
         elif self.pckt[packet_index].PID == 17:
-            self.more_info = """Table ID: %s
-Section syntax indicator: %d
-Section length: %d
-Transport stream id: %d
-Version number: %d
-Current next: %d
-Section number: %d
-Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
-                              self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
-                              self.pckt[packet_index].SECTION_LENGTH,
-                              self.pckt[packet_index].TRANSPORT_STREAM_ID,
-                              self.pckt[packet_index].VERSION_NUMBER,
-                              self.pckt[packet_index].CURRENT_NEXT_INDICATOR,
-                              self.pckt[packet_index].SECTION_NUMBER,
-                              self.pckt[packet_index].LAST_SECTION_NUMBER)
-
-            self.text_more_info.setText(self.more_info)
+            self.text_more_info.setText(self.SDT_P.INFO)
 
         else:
             self.text_more_info.setText("")
@@ -353,9 +354,10 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
         if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 0:
             self.entry_adaptation_status.setText("ISO")
             self.entry_adaptation_byte_count.setText("")
+            self.entry_adaptation_byte_count.setText(str(0))
         if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 1:
             self.entry_adaptation_status.setText("No adaptation field, payload only")
-            self.entry_adaptation_byte_count.setText("")
+            self.entry_adaptation_byte_count.setText(str(0))
         if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 2:
             self.entry_adaptation_status.setText("Adaptation field only, No payload")
             self.entry_adaptation_byte_count.setText(str(self.pckt[packet_index].ADAPTATION_FIELD_LENGTH+1))
