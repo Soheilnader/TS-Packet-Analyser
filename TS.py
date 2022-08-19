@@ -129,20 +129,6 @@ class TS:
             self.DESCRIPTORS_LOOP_LENGTH.append(((self.PAYLOAD[i+3] & 0xF) << 8) | self.PAYLOAD[i+4])
             self.DESCRIPTOR_TAG.append(self.PAYLOAD[i+5])
             self.DESCRIPTOR_LENGTH.append(self.PAYLOAD[i+6])
-            for j in range(self.DESCRIPTOR_LENGTH[0]):
-                self.PROGRAM_NAME[0].append(chr(self.PAYLOAD[j+21]))
-
-
-            self.INFO += """
-SERVICE_ID: %d
-EIT_SCHEDULE_FLAG: %d
-EIT_PRESENT_FOLLOWING_FLAG: %d
-RUNNING_STATUS: %d
-FREE_CA_MODE: %d
-DESCRIPTORS_LOOP_LENGTH: %d
-NAME: %s
-""" %(self.SERVICE_ID[0], self.EIT_SCHEDULE_FLAG[0], self.EIT_PRESENT_FOLLOWING_FLAG[0], self.RUNNING_STATUS[0], self.FREE_CA_MODE[0], self.DESCRIPTORS_LOOP_LENGTH[0],
-      ''.join(self.PROGRAM_NAME[0]))
 
         elif self.PID == 18:
             self.PID_TYPE = "NIT"

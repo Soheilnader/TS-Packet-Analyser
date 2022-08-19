@@ -11,6 +11,7 @@ import dialogabout
 import dialogpidlist
 import dialogpacketlist
 import dialogremux
+import dialoginfo
 
 
 def resource_path(relative_path):
@@ -38,8 +39,7 @@ class UI(QMainWindow):
 
         self.setFixedSize(877, 525)
         self.table_text_status = True
-
-
+        self.button_info.setEnabled(False)
 
         try:
             with open("config.ini", "r") as f:
@@ -91,56 +91,58 @@ class UI(QMainWindow):
         self.show()
 
     def open(self):
-        print("Open")
-        #try:
-        self.path = QFileDialog.getOpenFileName(self, "Open File", "", "TS Files (*.ts)")
-        self.entry_path.setText(self.path[0])
-        self.file_size = os.path.getsize(self.path[0])
-        self.number_of_packets = int(self.file_size / 188)
-        self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))
+        try:
+            print("Open")
+            #try:
+            self.path = QFileDialog.getOpenFileName(self, "Open File", "", "TS Files (*.ts)")
+            self.entry_path.setText(self.path[0])
+            self.file_size = os.path.getsize(self.path[0])
+            self.number_of_packets = int(self.file_size / 188)
+            self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))
 
-        self.pckt = []
-        self.pid_type_list = set()
-        self.sdt_pckt = []
-        self.sdt = []
-        self.packet_count = [0 for i in range(8192)]
-        with open(self.path[0], "rb") as f:
-            for j in range(self.number_of_packets):
-                lst = []
-                for i in range(188):
-                    bytes = ord(f.read(1))
-                    # print(hex(ord(txt)))
-                    lst.append(bytes)
-                self.progress_load.setRange(0, int(self.file_size / 188 - 1))
-                self.progress_load.setValue(j)
-                if j < self.number_of_packets:
-                    self.statusbar.showMessage("Loading...")
-                self.pckt.append(TS(lst))
-                self.packet_count[self.pckt[j].PID] += 1
-                self.pid_type_list.add(self.pckt[j].PID)
-                if self.pckt[j].PID == 17:
-                    if self.pckt[j].PAYLOAD not in self.sdt_pckt:
-                        self.sdt_pckt.append(self.pckt[j].return_payload())
-                        self.sdt += self.pckt[j].return_payload()
+            self.pckt = []
+            self.pid_type_list = set()
+            self.sdt_pckt = []
+            self.sdt = []
+            self.packet_count = [0 for i in range(8192)]
+            with open(self.path[0], "rb") as f:
+                for j in range(self.number_of_packets):
+                    lst = []
+                    for i in range(188):
+                        bytes = ord(f.read(1))
+                        # print(hex(ord(txt)))
+                        lst.append(bytes)
+                    self.progress_load.setRange(0, int(self.file_size / 188 - 1))
+                    self.progress_load.setValue(j)
+                    if j < self.number_of_packets:
+                        self.statusbar.showMessage("Loading...")
+                    self.pckt.append(TS(lst))
+                    self.packet_count[self.pckt[j].PID] += 1
+                    self.pid_type_list.add(self.pckt[j].PID)
+                    if self.pckt[j].PID == 17:
+                        if self.pckt[j].PAYLOAD not in self.sdt_pckt:
+                            self.sdt_pckt.append(self.pckt[j].return_payload())
+                            self.sdt += self.pckt[j].return_payload()
 
-        self.statusbar.showMessage("Ready")
-        self.ascii_state = False
-        self.packet_index = 0
-
-
-
-        print(len(self.sdt))
-        print(self.sdt)
-
-        self.SDT_P = SDT.SDT(self.sdt)
-        print(len(self.SDT_P.PAYLOAD))
-        print(self.SDT_P.PROGRAM_NAME)
-        self.show_func(self.packet_index)
+            self.statusbar.showMessage("Ready")
+            self.ascii_state = False
+            self.packet_index = 0
 
 
 
-    #    except:
-    #        pass
+            print(len(self.sdt))
+            print(self.sdt)
+
+            self.SDT_P = SDT.SDT(self.sdt)
+            print(len(self.SDT_P.PAYLOAD))
+            print(self.SDT_P.PROGRAM_NAME)
+            print(self.SDT_P.SERVICE_ID)
+            self.show_func(self.packet_index)
+
+
+
+        except:
+            pass
 
 
     def first(self):
@@ -315,6 +317,9 @@ class UI(QMainWindow):
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
 
         if self.pckt[packet_index].PID == 0:
+            self.button_info.setEnabled(True)
+            self.button_info.clicked.connect(self.info_d)
+
             self.more_info = """Table ID: %s
 Section syntax indicator: %d
 Section length: %d
@@ -346,9 +351,11 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
 
         elif self.pckt[packet_index].PID == 17:
             self.text_more_info.setText(self.SDT_P.INFO)
-
+            self.button_info.setEnabled(True)
+            self.button_info.clicked.connect(self.info_d)
         else:
             self.text_more_info.setText("")
+            self.button_info.setEnabled(False)
 
 
         if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 0:
@@ -396,6 +403,17 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             except:
                 pass
 
+    def info_d(self):
+        if self.pckt[self.packet_index].PID == 0:
+            self.dialog = dialoginfo.DialogInfo(0 ,self.pckt[self.packet_index])
+            #self.dialog.packet_count = self.packet_count
+            self.dialog.show()
+        if self.pckt[self.packet_index].PID == 17:
+            self.dialog = dialoginfo.DialogInfo(17 ,self.SDT_P)
+            #self.dialog.packet_count = self.packet_count
+            self.dialog.show()
+
+
     def text_radio(self):
         self.table_text_status = False
         print("Text")
@@ -423,6 +441,7 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             return string
         else:
             return "0" + string
+
 
 
     def exit(self):
