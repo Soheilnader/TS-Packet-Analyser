@@ -28,6 +28,30 @@ class DialogInfo(QDialog):
         self.setFixedSize(609, 407)
 
         if PID == 0:
+            self.label1.setText("Table ID:")
+            self.entry1.setText(hex(input_packets.TABLE_ID))
+            self.label2.setText("Section syntax indicator:")
+            self.entry2.setText(str(input_packets.SECTION_SYNTAX_INDICATOR))
+            self.label3.setText("Section length:")
+            self.entry3.setText(str(input_packets.SECTION_LENGTH))
+            self.label4.setText("Transport stream ID:")
+            self.entry4.setText(str(input_packets.TRANSPORT_STREAM_ID))
+            self.label5.setText("Version number:")
+            self.entry5.setText(str(input_packets.VERSION_NUMBER))
+            self.label6.setText("Current next indicator:")
+            self.entry6.setText(str(input_packets.CURRENT_NEXT_INDICATOR))
+            self.label7.setText("Section number:")
+            self.entry7.setText(str(input_packets.SECTION_NUMBER))
+            self.label8.setText("Last section number:")
+            self.entry8.setText(str(input_packets.LAST_SECTION_NUMBER))
+            self.label9.setText("CRC:")
+            self.entry9.setText("%s %s %s %s" %(self.str_2_char(hex(input_packets.CRC[0])[2:].upper()),
+                self.str_2_char(hex(input_packets.CRC[1])[2:].upper()),
+                self.str_2_char(hex(input_packets.CRC[2])[2:].upper()),
+                self.str_2_char(hex(input_packets.CRC[3])[2:].upper())))
+            self.label10.hide()
+            self.entry10.hide()
+
             self.table_info.setColumnCount(2)
             self.table_info.setHorizontalHeaderLabels(['PROGRAM_NUMBER', 'PROGRAM_MAP_PID'])
             self.table_info.setRowCount(len(input_packets.PROGRAM_NUMBER))
@@ -44,6 +68,30 @@ class DialogInfo(QDialog):
 
 
         if PID == 17:
+            self.label1.setText("Table ID:")
+            self.entry1.setText(hex(input_packets.TABLE_ID))
+            self.label2.setText("Section syntax indicator:")
+            self.entry2.setText(str(input_packets.SECTION_SYNTAX_INDICATOR))
+            self.label3.setText("Section length:")
+            self.entry3.setText(str(input_packets.SECTION_LENGTH))
+            self.label4.setText("Transport stream ID:")
+            self.entry4.setText(str(input_packets.TRANSPORT_STREAM_ID))
+            self.label5.setText("Version number:")
+            self.entry5.setText(str(input_packets.VERSION_NUMBER))
+            self.label6.setText("Current next indicator:")
+            self.entry6.setText(str(input_packets.CURRENT_NEXT_INDICATOR))
+            self.label7.setText("Section number:")
+            self.entry7.setText(str(input_packets.SECTION_NUMBER))
+            self.label8.setText("Last section number:")
+            self.entry8.setText(str(input_packets.LAST_SECTION_NUMBER))
+            self.label9.setText("CRC:")
+            self.entry9.setText("%s %s %s %s" %(self.str_2_char(hex(input_packets.CRC[0])[2:].upper()),
+                self.str_2_char(hex(input_packets.CRC[1])[2:].upper()),
+                self.str_2_char(hex(input_packets.CRC[2])[2:].upper()),
+                self.str_2_char(hex(input_packets.CRC[3])[2:].upper())))
+            self.label10.setText("Original network ID:")
+            self.entry10.setText(str(input_packets.ORIGINAL_NETWORK_ID))
+
             self.table_info.setColumnCount(6)
             self.table_info.setHorizontalHeaderLabels(['Service ID', 'Program name', 'EIT schedule flag', 'EIT present/following flag', 'Running status', 'Free CA mode'])
             self.table_info.setRowCount(len(input_packets.SERVICE_ID))
@@ -66,6 +114,11 @@ class DialogInfo(QDialog):
             self.table_info.resizeColumnToContents(4)
             self.table_info.resizeColumnToContents(5)
 
+    def str_2_char(self, string):
+        if len(string) == 2:
+            return string
+        else:
+            return "0" + string
 
         self.show()
 
