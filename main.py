@@ -95,7 +95,9 @@ class UI(QMainWindow):
             print("Open")
             #try:
             self.path = QFileDialog.getOpenFileName(self, "Open File", "", "TS Files (*.ts)")
-            self.entry_path.setText(self.path[0])
+            print(self.path)
+            if self.path[0] != '':
+                self.entry_path.setText(self.path[0])
             self.file_size = os.path.getsize(self.path[0])
             self.number_of_packets = int(self.file_size / 188)
             self.entry_info.setText("%d bytes,  %d packets" % (self.file_size, self.number_of_packets))

@@ -92,27 +92,32 @@ class DialogInfo(QDialog):
             self.label10.setText("Original network ID:")
             self.entry10.setText(str(input_packets.ORIGINAL_NETWORK_ID))
 
-            self.table_info.setColumnCount(6)
-            self.table_info.setHorizontalHeaderLabels(['Service ID', 'Program name', 'EIT schedule flag', 'EIT present/following flag', 'Running status', 'Free CA mode'])
+            self.table_info.setColumnCount(12)
+            self.table_info.setHorizontalHeaderLabels(['Service ID', 'Service provider name', 'Service name', 'EIT schedule flag', 'EIT present/following flag', 'Running status', 'Free CA mode', 'Descriptor Tag', 'Descriptor length', 'Service type', 'Service provider name length', 'Service name length'])
             self.table_info.setRowCount(len(input_packets.SERVICE_ID))
             row = 0
             for i in range(len(input_packets.SERVICE_ID)):
                 self.table_info.setItem(row, 0, QTableWidgetItem(str(input_packets.SERVICE_ID[i])))
-                self.table_info.setItem(row, 1, QTableWidgetItem(str(input_packets.PROGRAM_NAME[i])))
-                self.table_info.setItem(row, 2, QTableWidgetItem(str(input_packets.EIT_SCHEDULE_FLAG[i])))
-                self.table_info.setItem(row, 3, QTableWidgetItem(str(input_packets.EIT_PRESENT_FOLLOWING_FLAG[i])))
-                self.table_info.setItem(row, 4, QTableWidgetItem(str(input_packets.RUNNING_STATUS[i])))
-                self.table_info.setItem(row, 5, QTableWidgetItem(str(input_packets.FREE_CA_MODE[i])))
+                self.table_info.setItem(row, 1, QTableWidgetItem(str(input_packets.SERVICE_PROVIDER_NAME[i])))
+                self.table_info.setItem(row, 2, QTableWidgetItem(str(input_packets.SERVICE_NAME[i])))
+                self.table_info.setItem(row, 3, QTableWidgetItem(str(input_packets.EIT_SCHEDULE_FLAG[i])))
+                self.table_info.setItem(row, 4, QTableWidgetItem(str(input_packets.EIT_PRESENT_FOLLOWING_FLAG[i])))
+                self.table_info.setItem(row, 5, QTableWidgetItem(str(input_packets.RUNNING_STATUS[i])))
+                self.table_info.setItem(row, 6, QTableWidgetItem(str(input_packets.FREE_CA_MODE[i])))
+                self.table_info.setItem(row, 7, QTableWidgetItem(str(input_packets.DESCRIPTOR_TAG[i])))
+                self.table_info.setItem(row, 8, QTableWidgetItem(str(input_packets.DESCRIPTOR_LENGTH[i])))
+                self.table_info.setItem(row, 9, QTableWidgetItem(str(input_packets.SERVICE_TYPE[i])))
+                self.table_info.setItem(row, 10, QTableWidgetItem(str(input_packets.SERVICE_PROVIDER_NAME_LENGTH[i])))
+                self.table_info.setItem(row, 11, QTableWidgetItem(str(input_packets.SERVICE_NAME_LENGTH[i])))
+
+
                 row += 1
             for i in range(len(input_packets.SERVICE_ID)):
                 self.table_info.resizeRowToContents(i)
 
-            self.table_info.resizeColumnToContents(0)
-            self.table_info.resizeColumnToContents(1)
-            self.table_info.resizeColumnToContents(2)
-            self.table_info.resizeColumnToContents(3)
-            self.table_info.resizeColumnToContents(4)
-            self.table_info.resizeColumnToContents(5)
+            for i in range(12):
+                self.table_info.resizeColumnToContents(i)
+
 
     def str_2_char(self, string):
         if len(string) == 2:
