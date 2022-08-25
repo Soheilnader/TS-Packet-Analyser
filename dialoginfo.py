@@ -4,6 +4,7 @@ import sys
 import os
 
 import SDT
+import PMT
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -117,6 +118,49 @@ class DialogInfo(QDialog):
 
             for i in range(12):
                 self.table_info.resizeColumnToContents(i)
+
+        if input_packets.TABLE_ID == 2:
+            pmt = PMT.PMT(input_packets.PAYLOAD)
+            self.label1.setText("Table ID:")
+            self.entry1.setText(hex(pmt.TABLE_ID))
+            self.label2.setText("Section syntax indicator:")
+            self.entry2.setText(str(pmt.SECTION_SYNTAX_INDICATOR))
+            self.label3.setText("Section length:")
+            self.entry3.setText(str(pmt.SECTION_LENGTH))
+            self.label4.setText("Program number:")
+            self.entry4.setText(str(pmt.PROGRAM_NUMBER))
+            self.label5.setText("Version number:")
+            self.entry5.setText(str(pmt.VERSION_NUMBER))
+            self.label6.setText("Current next indicator:")
+            self.entry6.setText(str(pmt.CURRENT_NEXT_INDICATOR))
+            self.label7.setText("Section number:")
+            self.entry7.setText(str(pmt.SECTION_NUMBER))
+            self.label8.setText("Last section number:")
+            self.entry8.setText(str(pmt.LAST_SECTION_NUMBER))
+            self.label9.setText("CRC:")
+            self.entry9.setText("%s %s %s %s" %(self.str_2_char(hex(pmt.CRC[0])[2:].upper()),
+                self.str_2_char(hex(pmt.CRC[1])[2:].upper()),
+                self.str_2_char(hex(pmt.CRC[2])[2:].upper()),
+                self.str_2_char(hex(pmt.CRC[3])[2:].upper())))
+            self.label10.setText("PCR_PID:")
+            self.entry10.setText(str(pmt.PCR_PID))
+
+            self.table_info.setColumnCount(3)
+            self.table_info.setHorizontalHeaderLabels(['Stream type', 'Elementary PID', 'ES info length'])
+            self.table_info.setRowCount(len(pmt.STREAM_TYPE))
+            row = 0
+            for i in range(len(pmt.STREAM_TYPE)):
+                self.table_info.setItem(row, 0, QTableWidgetItem(str(pmt.STREAM_TYPE[i])))
+                self.table_info.setItem(row, 1, QTableWidgetItem(str(pmt.ELEMENTRY_PID[i])))
+                self.table_info.setItem(row, 2, QTableWidgetItem(str(pmt.ES_INFO_LENGTH[i])))
+
+                row += 1
+            for i in range(len(pmt.STREAM_TYPE)):
+                self.table_info.resizeRowToContents(i)
+
+            for i in range(3):
+                self.table_info.resizeColumnToContents(i)
+
 
 
     def str_2_char(self, string):

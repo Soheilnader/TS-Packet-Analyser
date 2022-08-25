@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QTableWidget
 import dialogdisplay
 from TS import TS
 import SDT
+import PMT
+
 import dialogabout
 import dialogpidlist
 import dialogpacketlist
@@ -318,11 +320,13 @@ class UI(QMainWindow):
         self.frame_ts_packet.setTitle("TS packet %d" % (packet_index + 1))
         self.entry_pid_type.setText(self.pckt[packet_index].PID_TYPE)
 
-        if self.pckt[packet_index].PID == 0:
-            self.button_info.setEnabled(True)
-            self.button_info.clicked.connect(self.info_d)
 
-            self.more_info = """Table ID: %s
+        if self.pckt[packet_index].PAYLOAD[0] == 0:
+            if self.pckt[packet_index].PID == 0:
+                self.button_info.setEnabled(True)
+                self.button_info.clicked.connect(self.info_d)
+
+                self.more_info = """Table ID: %s
 Section syntax indicator: %d
 Section length: %d
 Transport stream id: %d
@@ -330,35 +334,47 @@ Version number: %d
 Current/next indicator: %d
 Section number: %d
 Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
-                              self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
-                              self.pckt[packet_index].SECTION_LENGTH,
-                              self.pckt[packet_index].TRANSPORT_STREAM_ID,
-                              self.pckt[packet_index].VERSION_NUMBER,
-                              self.pckt[packet_index].CURRENT_NEXT_INDICATOR,
-                              self.pckt[packet_index].SECTION_NUMBER,
-                              self.pckt[packet_index].LAST_SECTION_NUMBER)
-            # self.text_more_info.setText(self.more_info)
-            self.more_info2 = ""
-            self.more_info3 = ""
-            for i in range(len(self.pckt[packet_index].PROGRAM_NUMBER)):
-                self.more_info2 += "Program number: %d => Program map PID: %d\n" % (
-                    self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
-            self.more_info3 = "Section CRC: %s %s %s %s" % (
-                self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()),
-                self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
-                self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()),
-                self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
-            self.text_more_info.setText(self.more_info + "\n\n\n" + self.more_info2 + "\n\n\n" + self.more_info3)
+                                  self.pckt[packet_index].SECTION_SYNTAX_INDICATOR,
+                                  self.pckt[packet_index].SECTION_LENGTH,
+                                  self.pckt[packet_index].TRANSPORT_STREAM_ID,
+                                  self.pckt[packet_index].VERSION_NUMBER,
+                                  self.pckt[packet_index].CURRENT_NEXT_INDICATOR,
+                                  self.pckt[packet_index].SECTION_NUMBER,
+                                  self.pckt[packet_index].LAST_SECTION_NUMBER)
+                # self.text_more_info.setText(self.more_info)
+                self.more_info2 = ""
+                self.more_info3 = ""
+                for i in range(len(self.pckt[packet_index].PROGRAM_NUMBER)):
+                    if self.pckt[packet_index].PROGRAM_NUMBER[i] == 0:
+                        self.more_info2 += "Program number: %d => Network PID: %d\n" % (self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
+                        continue
+                    self.more_info2 += "Program number: %d => Program map PID: %d\n" % (self.pckt[packet_index].PROGRAM_NUMBER[i], self.pckt[packet_index].PROGRAM_MAP_PID[i])
+                self.more_info3 = "Section CRC: %s %s %s %s" % (
+                    self.str_2_char(hex(self.pckt[packet_index].CRC[0])[2:].upper()),
+                    self.str_2_char(hex(self.pckt[packet_index].CRC[1])[2:].upper()),
+                    self.str_2_char(hex(self.pckt[packet_index].CRC[2])[2:].upper()),
+                    self.str_2_char(hex(self.pckt[packet_index].CRC[3])[2:].upper()))
+                self.text_more_info.setText(self.more_info + "\n\n\n" + self.more_info2 + "\n\n\n" + self.more_info3)
 
 
-        elif self.pckt[packet_index].PID == 17:
-            self.text_more_info.setText(self.SDT_P.INFO)
-            self.button_info.setEnabled(True)
-            self.button_info.clicked.connect(self.info_d)
+            elif self.pckt[packet_index].PID == 17:
+                self.text_more_info.setText(self.SDT_P.INFO)
+                self.button_info.setEnabled(True)
+                self.button_info.clicked.connect(self.info_d)
+            else:
+                if self.pckt[packet_index].TABLE_ID == 2:
+                    pmt = PMT.PMT(self.pckt[packet_index].PAYLOAD)
+                    self.text_more_info.setText(pmt.INFO)
+                    self.button_info.setEnabled(True)
+                    self.button_info.clicked.connect(self.info_d)
+
+
+                else:
+                    self.text_more_info.setText("")
+                    self.button_info.setEnabled(False)
         else:
             self.text_more_info.setText("")
             self.button_info.setEnabled(False)
-
 
         if self.pckt[packet_index].ADAPTATION_FIELD_CONTROL == 0:
             self.entry_adaptation_status.setText("ISO")
@@ -412,6 +428,10 @@ Last section number: %d""" % (hex(self.pckt[packet_index].TABLE_ID),
             self.dialog.show()
         if self.pckt[self.packet_index].PID == 17:
             self.dialog = dialoginfo.DialogInfo(17 ,self.SDT_P)
+            #self.dialog.packet_count = self.packet_count
+            self.dialog.show()
+        if self.pckt[self.packet_index].TABLE_ID == 2:
+            self.dialog = dialoginfo.DialogInfo(-1 ,self.pckt[self.packet_index])
             #self.dialog.packet_count = self.packet_count
             self.dialog.show()
 
