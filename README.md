@@ -2,6 +2,8 @@
 ## Overview
 TS-Packet-Analyser is a tool for analyzing MPEG-2 Transport Stream (TS) packets. This tool provides detailed insights into the structure and content of TS packets, including PAT, PMT, and other tables, making it useful for debugging and learning about MPEG-2 TS streams. This project was developed as part of an internship.
 
+![About Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/about.png?raw=true )
+
 ## Features
 Analyzes MPEG-2 Transport Stream packets
 Displays detailed information about Program Association Table (PAT) and Program Map Table (PMT)
@@ -11,6 +13,13 @@ User-friendly interface for visualizing TS packet contents using PyQt
 
 ![Main Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/MainWindow.png?raw=true )
 
+![Packet list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/packet_list.png?raw=true)
+
+![PID list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/pid_list.png?raw=true)
+
+![Packet list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/packet_list.png?raw=true)
+
+![Remux Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/remuxed.png?raw=true)
 
 
 ## MPEG Transport Stream
