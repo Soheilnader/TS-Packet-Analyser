@@ -9,6 +9,10 @@ User-friendly interface for visualizing TS packet contents using PyQt
 
 ## Screenshots
 
+![Main Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/MainWindow.png?raw=true )
+
+
+
 ## MPEG Transport Stream
 MPEG-TS, or MPEG Transport Stream, is a standard digital container format used for transmitting and storing audio, video, and data. It is commonly used in broadcasting systems such as DVB (Digital Video Broadcasting), ATSC (Advanced Television Systems Committee), and IPTV (Internet Protocol Television).
 
