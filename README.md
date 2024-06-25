@@ -17,8 +17,6 @@ User-friendly interface for visualizing TS packet contents using PyQt
 
 ![PID list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/pid_list.png?raw=true)
 
-![Packet list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/packet_list.png?raw=true)
-
 ![Remux Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/remuxed.png?raw=true)
 
 
