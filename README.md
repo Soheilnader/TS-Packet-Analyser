@@ -6,7 +6,9 @@ TS-Packet-Analyser is a tool for analyzing MPEG-2 Transport Stream (TS) packets.
 
 ## Features
 Analyzes MPEG-2 Transport Stream packets
+
 Displays detailed information about Program Association Table (PAT) and Program Map Table (PMT)
+
 User-friendly interface for visualizing TS packet contents using PyQt
 
 ## Screenshots
