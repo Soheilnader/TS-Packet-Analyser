@@ -15,6 +15,10 @@ User-friendly interface for visualizing TS packet contents using PyQt
 
 ![Main Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/MainWindow.png?raw=true )
 
+Input sample: [ https://tsduck.io/streams/?name=hotbird-13.0E]( https://tsduck.io/streams/?name=hotbird-13.0E/).
+
+
+
 ![Packet list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/packet_list.png?raw=true)
 
 ![PID list Window](https://github.com/Soheilnader/TS-Packet-Analyser/blob/main/docs/images/pid_list.png?raw=true)
